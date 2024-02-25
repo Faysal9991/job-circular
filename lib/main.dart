@@ -4,6 +4,7 @@ import 'package:job_circuler/firebase_options.dart';
 import 'package:job_circuler/screens/auth/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
+import 'package:job_circuler/splash_screen.dart';
 
 void main()async {
    WidgetsFlutterBinding.ensureInitialized();
@@ -25,15 +26,15 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xffF4F2F3),
         textTheme: TextTheme(
           // Define your text styles here
-          displayLarge: GoogleFonts.playfair(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black),
-          displayMedium: GoogleFonts.playfair(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.black),
-          bodyLarge: GoogleFonts.playfair(fontSize: 20.0,fontWeight: FontWeight.bold, color: Colors.black),
-          bodyMedium: GoogleFonts.playfair(fontSize: 14.0, color: Colors.black), 
-          bodySmall: GoogleFonts.playfair(fontSize: 12.0, color: const Color(0xFFA4A4A4))
+          displayLarge: GoogleFonts.lato(fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.black),
+          displayMedium: GoogleFonts.lato(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.black),
+          bodyLarge: GoogleFonts.lato(fontSize: 20.0,fontWeight: FontWeight.bold, color: Colors.black),
+          bodyMedium: GoogleFonts.lato(fontSize: 14.0, color: Colors.black), 
+          bodySmall: GoogleFonts.lato(fontSize: 12.0, color: const Color(0xFFA4A4A4))
         ),
         useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple).copyWith(background: const Color(0xFFF7F7F7)),
       ),
-      home: const HomeScreen()
+      home: const SplashScreen()
     );
   }
 }
