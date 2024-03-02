@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:job_circuler/provider/auth_provider.dart';
+import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:job_circuler/screens/auth/login.dart';
+import 'package:job_circuler/screens/home/dashboard_Screen.dart';
+import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,10 +17,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+        var provider = Provider.of<AuthProvider>(context, listen: false); // <==== Service from Provider, which contains data for _isEmailVerified
+      var dashboard_provider = Provider.of<DashBoardProvider>(context, listen: false);
+      dashboard_provider.configureFirebaseMessaging();
+   dashboard_provider.configureLocalNotifications();
     Future.delayed(const Duration(milliseconds: 500), () {
-   Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+     provider. getLoginAccess().then((value) {
+      if(value){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DashboardScreen()));
+      }else{
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
 
-  setState(() {});
+      }
+     });
+    
+   
 });
     super.initState();
   }
