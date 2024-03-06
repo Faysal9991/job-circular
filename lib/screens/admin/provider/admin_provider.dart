@@ -11,9 +11,9 @@ import 'package:job_circuler/model/job_model.dart';
 class AdminProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
    Future init() async {
-      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-    await _firebaseMessaging.requestPermission(
+    await firebaseMessaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -23,7 +23,7 @@ class AdminProvider with ChangeNotifier {
       sound: true,
     );
     // get the device fcm token
-    final token = await _firebaseMessaging.getToken();
+    final token = await firebaseMessaging.getToken();
     print("device token: $token");
   }
   final List<String> type = [
@@ -145,9 +145,8 @@ class AdminProvider with ChangeNotifier {
       firestore.collection("notification").add({
         "title": title,
         "description": description,
-      }).then((value) {
-        print("-------${value.id}");
-      });
+        "user":[]
+      }).then((value) {});
       EasyLoading.showSuccess("Successful");
       return true;
     } on FirebaseException catch (e) {

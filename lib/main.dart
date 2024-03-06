@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         builder: EasyLoading.init(),
         theme: ThemeData(
           primaryColor: const Color(0xffFCD733), // #f7f7f7
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)
               .copyWith(background: const Color(0xFFF7F7F7)),
         ),
-        home: const SplashScreen());
+        home: const AdminFirstScreen());
   }
 }
 

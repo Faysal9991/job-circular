@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:job_circuler/model/job_model.dart';
 import 'package:job_circuler/model/notification_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashBoardProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -47,18 +48,43 @@ class DashBoardProvider with ChangeNotifier {
   }
 final CollectionReference _notification = FirebaseFirestore.instance.collection('notification');
 
+bool isShowNotification = false;
+ showNotification(bool value){
+ isShowNotification = value;
+ notifyListeners();
+ }
+
 
 Stream<List<NotificationModel>> getNotification() {
   return _notification.snapshots().map((QuerySnapshot querySnapshot) {
     return querySnapshot.docs.map((QueryDocumentSnapshot documentSnapshot) {
       return NotificationModel(
         title: documentSnapshot.get('title') ?? "",
-        discription: documentSnapshot.get('description') ?? "",
+        description: documentSnapshot.get('description') ?? "",
+        user: documentSnapshot.get('user') ?? "",
+        id: documentSnapshot.id
       );
     }).toList();
   });
 }
  bool bookmark = false;
+ //*----------come here
+ updateNotification(
+  String id,
+  String title,
+  String description,
+  List user,
+  ) async{
+      final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+   user.add(sharedPreferences.get("userId"));
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    _notification.doc(id).update(
+      {   "title":title,
+         "description":description,
+          "user": user,
+        }
+    );
+  }
  
   updateBookmark(
   String jobName,
@@ -90,6 +116,7 @@ Stream<List<NotificationModel>> getNotification() {
         }
     );
   }
+ 
  String search ="";
  addtoSearch(String text){
   search = text;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/model/job_model.dart';
 import 'package:job_circuler/screens/admin/provider/admin_provider.dart';
+import 'package:job_circuler/screens/auth/login.dart';
 import 'package:job_circuler/screens/pick_image/widget/provider/pick_image_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -64,42 +65,54 @@ class _AdminFirstScreenState extends State<AdminFirstScreen> {
         leading: Consumer<AdminProvider>(
         
           builder: (context, provider,child) {
-            return IconButton(
-                onPressed: () {
-                  AwesomeDialog(
-                    context: context,
-                    animType: AnimType.scale,
-                    dialogType: DialogType.infoReverse,
-                    body: Column(children: [
-                      CustomTextField(
-                        controller: title,
-                        hintText: "title",
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: notificationDescription,
-                        hintText: "description",
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ]),
-                    
-                    btnOkOnPress: () {
-                      if(title.text.isEmpty && notificationDescription.text.isEmpty){
-                               var snackBar = SnackBar(content: Text( "sorry Fild is empty"));
-                       
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }else{
-                                              provider.sendNotificationLocal(title:title.text,description:notificationDescription.text  );
-
-                      }
+            return Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      AwesomeDialog(
+                        context: context,
+                        animType: AnimType.scale,
+                        dialogType: DialogType.infoReverse,
+                        body: Column(children: [
+                          CustomTextField(
+                            controller: title,
+                            hintText: "title",
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          CustomTextField(
+                            controller: notificationDescription,
+                            hintText: "description",
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ]),
+                        
+                        btnOkOnPress: () {
+                          if(title.text.isEmpty && notificationDescription.text.isEmpty){
+                                   var snackBar = SnackBar(content: Text( "sorry Fild is empty"));
+                           
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }else{
+                                                  provider.sendNotificationLocal(title:title.text,description:notificationDescription.text  );
+                
+                          }
+                        },
+                      )..show();
                     },
-                  )..show();
-                },
-                icon: Icon(Icons.notification_add));
+                    icon: Icon(Icons.notification_add)),
+                  IconButton(
+                    onPressed: () {
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+
+                   },
+                    icon: Icon(Icons.exit_to_app_outlined)),
+           
+             
+              ],
+            );
           }
         ),
         title: const Text("Admin panel"),

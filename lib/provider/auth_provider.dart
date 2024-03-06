@@ -87,7 +87,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     });
   }
-
+ 
   Future<bool> getLoginAccess() async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.get("userId") != null) {
