@@ -17,19 +17,14 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-        var provider = Provider.of<AuthProvider>(context, listen: false); // <==== Service from Provider, which contains data for _isEmailVerified
+  var provider = Provider.of<AuthProvider>(context, listen: false); // <==== Service from Provider, which contains data for _isEmailVerified
       var dashboard_provider = Provider.of<DashBoardProvider>(context, listen: false);
+      provider.getTheme();
       dashboard_provider.configureFirebaseMessaging();
    dashboard_provider.configureLocalNotifications();
-    Future.delayed(const Duration(milliseconds: 500), () {
-     provider. getLoginAccess().then((value) {
-      if(value){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DashboardScreen()));
-      }else{
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+    Future.delayed(const Duration(milliseconds: 300), () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DashboardScreen()));
 
-      }
-     });
     
    
 });

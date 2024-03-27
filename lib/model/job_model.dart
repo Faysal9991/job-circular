@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 JobModel jobModelFromJson(String str) => JobModel.fromJson(json.decode(str));
 
 String jobModelToJson(JobModel data) => json.encode(data.toJson());
@@ -20,7 +22,9 @@ class JobModel {
     List<dynamic> list;
     String link;
     bool bookMark;
-
+    bool popular;
+    Timestamp date;
+    Timestamp deadline;
     JobModel({
         required this.name,
         required this.description,
@@ -33,6 +37,9 @@ class JobModel {
         required this.list,
         required this.link,
         required this.bookMark,
+         required this.popular,
+          required this.date,
+          required this.deadline
     });
 
     factory JobModel.fromJson(Map<String, dynamic> json) => JobModel(
@@ -47,6 +54,9 @@ class JobModel {
         list: List<dynamic>.from(json["list"].map((x) => x)),
         link: json["link"],
         bookMark: json["bookMark"],
+        popular: json["popular"],
+        date: json["date"],
+        deadline:json["deadline"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -61,5 +71,8 @@ class JobModel {
         "list": List<dynamic>.from(list.map((x) => x)),
         "link": link,
         "bookMark": bookMark,
+        "popular":popular,
+        "date" : date,
+        "deadline":deadline
     };
 }

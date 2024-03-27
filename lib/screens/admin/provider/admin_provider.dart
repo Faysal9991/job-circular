@@ -90,7 +90,10 @@ class AdminProvider with ChangeNotifier {
             companyImage: documentSnapshot.get('companyImage') ?? "",
             list: documentSnapshot.get('list') ?? [],
             link: documentSnapshot.get('link')??"",
-            bookMark: documentSnapshot.get('bookMark')??false
+            bookMark: documentSnapshot.get('bookMark')??false,
+            popular:documentSnapshot.get('popular')??false, 
+            date:documentSnapshot.get('date'),
+            deadline:documentSnapshot.get('deadline')
             );
       }).toList();
     });
@@ -162,5 +165,7 @@ class AdminProvider with ChangeNotifier {
   }
 
     
+
+
 
 }

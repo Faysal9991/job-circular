@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/home/bookmark_screen.dart';
+import 'package:job_circuler/screens/home/calculator.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:job_circuler/screens/profile/profile.dart';
 import 'package:line_icons/line_icons.dart';
-
-
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,34 +16,40 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-   int _selectedIndex = 0;
+ 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookMarkPage(),
+    CalculatorScreen(),
     ProfileScreen()
-
-   ];
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: Consumer<AuthProvider>(builder: (context, provider, child) {
+          return Center(
+            child: _widgetOptions.elementAt(provider.selectedIndex),
+          );
+        }
       ),
-         bottomNavigationBar: GNav(
-          backgroundColor: Colors.white,
+      bottomNavigationBar: Consumer<AuthProvider>(builder: (context, provider, child) {
+        return GNav(
+          backgroundColor: Colors.grey.withOpacity(0.1),
           // tab button hover color
           haptic: true, // haptic feedback
           tabBorderRadius: 10, // tab button border
-
-          // curve: Curves.easeOutExpo, // tab animation curves
+          style: GnavStyle.google,
+          curve: Curves.easeOutExpo, // tab animation curves
           duration: const Duration(milliseconds: 900), // tab animation duration
-          gap: 8, // the tab button gap between icon and text
-          color: Colors.grey[800], // unselected icon color
-          activeColor: Colors.blue, // selected icon and text color
-          iconSize: 24, // tab button icon size
-          tabBackgroundColor: Colors.blue.withOpacity(0.1), // selected tab background color
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // navigation bar padding
+          gap: 5, // the tab button gap between icon and text
+          color: provider.isdark?Colors.white:Colors.black, // unselected icon color
+          activeColor:Colors.white, // selected icon and text color
+          iconSize: 15, // tab button icon size
+          tabBackgroundColor: Colors.blue, // selected tab background color
+          textSize: 10,
+          
+          textStyle:Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+          // navigation bar padding
           tabs: const [
             GButton(
               icon: LineIcons.home,
@@ -52,19 +59,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: LineIcons.bookmark,
               text: 'BookMark',
             ),
+             GButton(
+              icon: LineIcons.calculator,
+              text: 'Calculator',
+            ),
             GButton(
               icon: LineIcons.user,
               text: 'Profile',
             )
           ],
-           selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },),
-   
-     );
- 
+          selectedIndex: provider.selectedIndex,
+          onTabChange: (index) {
+          
+             provider.changeselectedIndex(index);
+            
+          },
+        );
+      }),
+    );
   }
 }

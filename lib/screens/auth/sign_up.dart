@@ -77,7 +77,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         left: width * 0.06,
                         right: width * 0.06,
                         child: Container(
-                          height: MediaQuery.of(context).size.width * 1.3, // Adjust as needed
+                          
+                          height: MediaQuery.of(context).size.height * .75, // Adjust as needed
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),

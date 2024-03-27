@@ -124,6 +124,7 @@ class _AdminFirstScreenState extends State<AdminFirstScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                
                 CustomTextField(
                   controller: jobName,
                   hintText: "jobName",

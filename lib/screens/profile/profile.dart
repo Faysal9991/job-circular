@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/auth/login.dart';
+import 'package:job_circuler/screens/auth/sign_up.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,6 +16,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    Provider.of<AuthProvider>(context,listen:  false).getLoginAccess();
+    super.initState();
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -23,22 +31,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             // User card
             BigUserCard(
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.white,
               userName: "${provider.userModel.userName}",
               userProfilePic: const AssetImage(
                 "assets/background/profile.jpg",
               ),
               cardActionWidget: SettingsItem(
-                icons: Icons.edit,
-                iconStyle: IconStyle(
-                  withBackground: true,
-                  borderRadius: 50,
-                  backgroundColor: Colors.yellow[600],
-                ),
-                title: "Modify",
-                subtitle: "Tap to change your data",
+                icons: Icons.check_circle,
+               
+                title: provider.userModel.userName==null||provider.userModel.userName==""?"Please login First":"${provider.userModel.userName}",
                 onTap: () {
-                  final snackBar = SnackBar(
+                  if(provider.userModel.userName==null||provider.userModel.userName==""){
+                     Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  }else{
+                     final snackBar = SnackBar(
                     /// need to set following properties for best effect of awesome_snackbar_content
                     elevation: 0,
                     behavior: SnackBarBehavior.floating,
@@ -55,36 +62,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(snackBar);
+                  }
+                 
                 },
               ),
             ),
             SettingsGroup(
               items: [
-                SettingsItem(
-                  onTap: () {
-                    final snackBar = SnackBar(
-                      /// need to set following properties for best effect of awesome_snackbar_content
-                      elevation: 0,
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      content: AwesomeSnackbarContent(
-                        title: 'On Sorry !',
-                        message: 'This feature will come in soon ',
-
-                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                        contentType: ContentType.failure,
-                      ),
-                    );
-
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(snackBar);
-                  },
-                  icons: CupertinoIcons.pencil_outline,
-                  iconStyle: IconStyle(),
-                  title: 'Appearance',
-                  subtitle: "Make Ziar'App yours",
-                ),
+                
                 SettingsItem(
                   onTap: () {
                     final snackBar = SnackBar(
@@ -114,8 +99,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Dark mode',
                   subtitle: "Automatic",
                   trailing: Switch.adaptive(
-                    value: false,
-                    onChanged: (value) {},
+                    value: provider.isdark,
+                    onChanged: (value) {
+                      print("sbjkbvjkbvjkbev  ${value}");
+provider.changeTheme(value);
+                    },
                   ),
                 ),
               ],
@@ -156,7 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return SettingsGroup(
                 settingsGroupTitle: "Account",
                 items: [
-                  SettingsItem(
+                  
+                provider.isLogin?  SettingsItem(
                     onTap: () {
                       provider.logout();
                       Navigator.of(context).pushReplacement(
@@ -164,6 +153,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     icons: Icons.exit_to_app_rounded,
                     title: "Sign Out",
+                  ):
+                  SettingsItem(
+                    onTap: () {
+                      provider.logout();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const SignUpScreen()));
+                    },
+                    icons: Icons.exit_to_app_rounded,
+                    title: "Create account",
                   ),
                   SettingsItem(
                     onTap: () {

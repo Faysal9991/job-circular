@@ -90,7 +90,7 @@ class _JobDetailsState extends State<JobDetails> {
                         width: width * 0.3,
                         decoration:
                             BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(20)),
-                            child: CustomImageView(imagePath: snapshot.data![widget.index].companyImage,fit: BoxFit.cover,),
+                            child: customNetworkImage( context,snapshot.data![widget.index].companyImage,),
                       ),
                     ),
                     const SizedBox(
@@ -169,7 +169,7 @@ class _JobDetailsState extends State<JobDetails> {
                             return Container(
                               color: Colors.white,
                               height: 200,
-                             child: CustomImageView(imagePath:"${snapshot.data![widget.index].list[index]}")
+                             child: customNetworkImage(context,"${snapshot.data![widget.index].list[index]}")
 
                               );})
                   ],

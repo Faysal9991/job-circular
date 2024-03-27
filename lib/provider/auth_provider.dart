@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<SharedPreferences> preferences = SharedPreferences.getInstance();
   UserModel userModel = UserModel();
   dynamic profile;
   bool isLogin = false;
@@ -25,6 +26,7 @@ class AuthProvider with ChangeNotifier {
     required String password,
     required String username,
   }) async {
+
     // Obtain shared preferences.
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     EasyLoading.show(status: "Creating Profile");
@@ -51,8 +53,15 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+bool isdark = false;
+changeTheme(bool value)async{
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+isdark = value;
+   
+prefs.setBool("isdark", isdark);
+notifyListeners();
+}
   DocumentSnapshot? userDetails;
-
   Future<bool> signIn(String email, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     EasyLoading.show(status: "Logging In");
@@ -91,8 +100,10 @@ class AuthProvider with ChangeNotifier {
   Future<bool> getLoginAccess() async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.get("userId") != null) {
+      isLogin = true;
       return true;
     } else {
+      isLogin = false;
       return false;
     }
   }
@@ -106,4 +117,15 @@ class AuthProvider with ChangeNotifier {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     userId = sharedPreferences.getString("userId");
   }
-}
+ getTheme()async{
+     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+isdark =  sharedPreferences.getBool("isdark")??false;
+notifyListeners();
+ }
+
+ int selectedIndex = 0;
+ changeselectedIndex(int index){
+ selectedIndex = index;
+ notifyListeners();
+ }
+ }

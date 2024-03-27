@@ -7,6 +7,7 @@ import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/admin/admin_first_screen.dart';
 import 'package:job_circuler/screens/auth/sign_up.dart';
+import 'package:job_circuler/screens/home/dashboard_Screen.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: width * 0.06,
                         right: width * 0.06,
                         child: Container(
-                          height: MediaQuery.of(context).size.width * 1.25, // Adjust as needed
+                          height: MediaQuery.of(context).size.height * .65, // Adjust as needed
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -161,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               .then((value) {
                                             if (value) {
                                               Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (context) => HomeScreen()));
+                                                  builder: (context) => DashboardScreen()));
                                             }
                                           });
                                         }
