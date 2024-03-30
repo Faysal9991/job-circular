@@ -95,6 +95,19 @@ class DashBoardProvider with ChangeNotifier {
     
   }
 
+
+
+ addToBookMark()async{
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(sharedPreferences.get("userId")==null||sharedPreferences.get("userId")==""){
+      EasyLoading.showToast("Please Login First!");
+    }else{
+String? userId = sharedPreferences.getString("userId");
+       await firestore.collection('users').doc(userId).update({"bookmark":"true"});
+    }
+     
+
+ }
   updateBookmark(
       String jobName,
       String description,
