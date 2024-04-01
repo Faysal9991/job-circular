@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
-import 'package:job_circuler/screens/auth/login.dart';
 import 'package:job_circuler/screens/home/dashboard_Screen.dart';
-import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 

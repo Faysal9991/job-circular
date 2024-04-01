@@ -9,6 +9,7 @@ import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:job_circuler/screens/admin/provider/admin_provider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:job_circuler/screens/home/deadlineFilter.dart';
+import 'package:job_circuler/screens/home/from_drawer.dart';
 import 'package:job_circuler/screens/home/job_details.dart';
 import 'package:job_circuler/screens/home/notification/notification.dart';
 import 'package:job_circuler/screens/home/search_job.dart';
@@ -147,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 50,
               ),
+
               StreamBuilder<List<Menu>>(
                   stream: pro.getMenu(),
                   builder: (context, snapshot) {
@@ -203,7 +205,92 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                         });
-                  })
+                  }),
+Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
+                StreamBuilder<List<String>>(
+                stream: pro.getCategoryListStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.data!.length,
+                          separatorBuilder: (ctx, idx) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    pro.chanageIndex(index);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FromDrawerScreen(
+                    categoryName:  snapshot.data![index],
+                  )));
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5),
+                                        color:Colors.blue
+                                            
+                                          ,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: pro.selectedIndex ==
+                                                      index
+                                                  ? Colors.black
+                                                      .withOpacity(0.5)
+                                                  : Colors.grey.withOpacity(
+                                                      0.2), // Shadow color
+                                              blurRadius:
+                                                  10, // Spread of the shadow
+                                              offset: const Offset(0,
+                                                  3) // Offset of the shadow
+                                              )
+                                        ],
+                                        border: Border.all(
+                                            color: pro.selectedIndex == index
+                                                ? Colors.white
+                                                : Colors.grey,
+                                            width: 0.2)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        snapshot.data![index],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color:
+                                                    pro.selectedIndex == index
+                                                        ? Colors.white
+                                                        : auth.isdark
+                                                            ? Colors.black
+                                                            : Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                    );
+                  }
+                }),
+                
             ],
           ),
         ),

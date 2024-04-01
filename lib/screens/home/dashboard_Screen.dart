@@ -17,7 +17,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
- 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookMarkPage(),
@@ -27,32 +26,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-onWillPop: ()async{
- return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Exit App'),
-            content: Text('Are you sure you want to exit?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('No'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text('Yes'),
-              ),
-            ],
-          ),
-        ) ?? false;
-},      child: Scaffold(
+      onWillPop: () async {
+        print("will pop working-----------------");
+        final value = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Alert"),
+                content: Text("Do you want to Exit ?."),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("No")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("Yes")),
+                ],
+              );
+            });
+
+        if (value != null) {
+          return Future.value(value);
+        } else {
+          return Future.value(false);
+        }
+      },
+      child: Scaffold(
         body: Consumer<AuthProvider>(builder: (context, provider, child) {
-            return Center(
-              child: _widgetOptions.elementAt(provider.selectedIndex),
-            );
-          }
-        ),
-        bottomNavigationBar: Consumer<AuthProvider>(builder: (context, provider, child) {
+          return Center(
+            child: _widgetOptions.elementAt(provider.selectedIndex),
+          );
+        }),
+        bottomNavigationBar:
+            Consumer<AuthProvider>(builder: (context, provider, child) {
           return GNav(
             backgroundColor: Colors.grey.withOpacity(0.1),
             // tab button hover color
@@ -60,15 +70,21 @@ onWillPop: ()async{
             tabBorderRadius: 10, // tab button border
             style: GnavStyle.google,
             curve: Curves.easeOutExpo, // tab animation curves
-            duration: const Duration(milliseconds: 900), // tab animation duration
+            duration:
+                const Duration(milliseconds: 900), // tab animation duration
             gap: 5, // the tab button gap between icon and text
-            color: provider.isdark?Colors.white:Colors.black, // unselected icon color
-            activeColor:Colors.white, // selected icon and text color
+            color: provider.isdark
+                ? Colors.white
+                : Colors.black, // unselected icon color
+            activeColor: Colors.white, // selected icon and text color
             iconSize: 15, // tab button icon size
             tabBackgroundColor: Colors.blue, // selected tab background color
             textSize: 10,
-            
-            textStyle:Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+
+            textStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.white),
             // navigation bar padding
             tabs: const [
               GButton(
@@ -79,7 +95,7 @@ onWillPop: ()async{
                 icon: LineIcons.bookmark,
                 text: 'BookMark',
               ),
-               GButton(
+              GButton(
                 icon: LineIcons.calculator,
                 text: 'Calculator',
               ),
@@ -90,9 +106,7 @@ onWillPop: ()async{
             ],
             selectedIndex: provider.selectedIndex,
             onTabChange: (index) {
-            
-               provider.changeselectedIndex(index);
-              
+              provider.changeselectedIndex(index);
             },
           );
         }),
