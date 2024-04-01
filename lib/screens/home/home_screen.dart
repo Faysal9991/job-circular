@@ -1,9 +1,6 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/model/job_model.dart';
 import 'package:job_circuler/model/menu.dart';
 import 'package:job_circuler/model/notification_model.dart';
@@ -16,7 +13,7 @@ import 'package:job_circuler/screens/home/job_details.dart';
 import 'package:job_circuler/screens/home/notification/notification.dart';
 import 'package:job_circuler/screens/home/search_job.dart';
 import 'package:job_circuler/screens/menu_details.dart';
-import 'package:popover/popover.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DashBoardProvider, AuthProvider>(builder: (context, pro, auth, child) {
+    return Consumer2<DashBoardProvider, AuthProvider>(
+        builder: (context, pro, auth, child) {
       return Scaffold(
         extendBody: true,
         appBar: AppBar(
@@ -53,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 InkWell(
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const SearchJob()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchJob()));
                   },
                   child: const Icon(
                     Icons.search,
@@ -73,12 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? true
                                   : false,
                               context),
-                          _buildPopupMenuItem(
-                              pro.filter[1], pro.lastThreeDays ? true : false, context),
-                          _buildPopupMenuItem(
-                              pro.filter[2], pro.lastTenDays ? true : false, context),
-                          _buildPopupMenuItem(
-                              pro.filter[3], pro.lastTwineDays ? true : false, context),
+                          _buildPopupMenuItem(pro.filter[1],
+                              pro.lastThreeDays ? true : false, context),
+                          _buildPopupMenuItem(pro.filter[2],
+                              pro.lastTenDays ? true : false, context),
+                          _buildPopupMenuItem(pro.filter[3],
+                              pro.lastTwineDays ? true : false, context),
                           _buildPopupMenuItem("by deadline", false, context),
                         ],
                     child: Padding(
@@ -107,18 +107,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       return InkWell(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const NotificationScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationScreen()));
                         },
                         child: badges.Badge(
                           badgeContent: pro.isShowNotification
                               ? null
                               : Text(
-                                  snapshot.data == null ? "" : snapshot.data!.length.toString(),
+                                  snapshot.data == null
+                                      ? ""
+                                      : snapshot.data!.length.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
-                                      .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                      .copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                 ),
                           child: SvgPicture.asset(
                             "assets/svg/notification.svg",
@@ -146,9 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data == null ? 0 : snapshot.data!.length,
+                        itemCount:
+                            snapshot.data == null ? 0 : snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
@@ -159,8 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MenuDetails(
-                                              name: snapshot.data![index].name ?? "",
-                                              description: snapshot.data![index].details ?? "",
+                                              name:
+                                                  snapshot.data![index].name ??
+                                                      "",
+                                              description: snapshot
+                                                      .data![index].details ??
+                                                  "",
                                             )));
                               },
                               child: SizedBox(
@@ -174,11 +187,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Text(
                                         overflow: TextOverflow.ellipsis,
                                         "${snapshot.data![index].name}",
-                                        style: Theme.of(context).textTheme.bodyMedium,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
                                       ),
                                     ),
                                     Divider(
-                                      color: auth.isdark ? Colors.white : Colors.black,
+                                      color: auth.isdark
+                                          ? Colors.white
+                                          : Colors.black,
                                     )
                                   ],
                                 ),
@@ -202,7 +219,10 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 "Popular jobs",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 20),
               ),
             ),
             const SizedBox(
@@ -215,7 +235,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: StreamBuilder<List<JobModel>>(
                       stream: pro.getAllFood(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
@@ -226,13 +247,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             itemCount: snapshot.data!.length,
-                            separatorBuilder: ((context, index) => const SizedBox(
+                            separatorBuilder: ((context, index) =>
+                                const SizedBox(
                                   width: 10,
                                 )),
                             itemBuilder: ((context, index) {
                               return jobModels[index].popular
                                   ? SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.9,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       child: jobCard(
                                           context: context,
                                           data: jobModels[index],
@@ -249,7 +272,10 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 "Recent jobs",
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 20),
               ),
             ),
             const SizedBox(height: 10),
@@ -263,7 +289,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else {
                     return Container(
                       height: 60,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: ListView.separated(
@@ -284,19 +311,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(5),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                           color: pro.selectedIndex == index
                                               ? Colors.blue
                                               : auth.isdark
-                                                  ? Colors.white.withOpacity(0.5)
+                                                  ? Colors.white
+                                                      .withOpacity(0.5)
                                                   : Colors.white,
                                           boxShadow: [
                                             BoxShadow(
-                                                color: pro.selectedIndex == index
-                                                    ? Colors.black.withOpacity(0.5)
-                                                    : Colors.grey.withOpacity(0.2), // Shadow color
-                                                blurRadius: 10, // Spread of the shadow
-                                                offset: const Offset(0, 3) // Offset of the shadow
+                                                color: pro.selectedIndex ==
+                                                        index
+                                                    ? Colors.black
+                                                        .withOpacity(0.5)
+                                                    : Colors.grey.withOpacity(
+                                                        0.2), // Shadow color
+                                                blurRadius:
+                                                    10, // Spread of the shadow
+                                                offset: const Offset(0,
+                                                    3) // Offset of the shadow
                                                 )
                                           ],
                                           border: Border.all(
@@ -308,12 +342,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         padding: const EdgeInsets.all(10),
                                         child: Text(
                                           snapshot.data![index],
-                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                              color: pro.selectedIndex == index
-                                                  ? Colors.white
-                                                  : auth.isdark
-                                                      ? Colors.black
-                                                      : Colors.grey),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color:
+                                                      pro.selectedIndex == index
+                                                          ? Colors.white
+                                                          : auth.isdark
+                                                              ? Colors.black
+                                                              : Colors.grey),
                                         ),
                                       ),
                                     ),
@@ -339,26 +377,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       return StreamBuilder<List<String>>(
                           stream: pro.getCategoryListStream(),
                           builder: (context, snap) {
-                            if (snap.connectionState == ConnectionState.waiting) {
+                            if (snap.connectionState ==
+                                ConnectionState.waiting) {
                               return const CircularProgressIndicator();
                             } else if (snap.hasError) {
                               return Text('Error: ${snap.error}');
                             } else {
                               // Use the data from the stream
                               List<JobModel> jobModels = snapshot.data!;
-                              jobModels.sort((a, b) => b.date.compareTo(a.date));
-                              List<JobModel> threedaysJobList = jobModels.where((job) {
-                                Duration difference = DateTime.now().difference(job.date.toDate());
+                              jobModels
+                                  .sort((a, b) => b.date.compareTo(a.date));
+                              List<JobModel> threedaysJobList =
+                                  jobModels.where((job) {
+                                Duration difference = DateTime.now()
+                                    .difference(job.date.toDate());
 
                                 return difference.inDays <= 3;
                               }).toList();
-                              List<JobModel> tenfilteredJobs = jobModels.where((job) {
-                                Duration difference = DateTime.now().difference(job.date.toDate());
+                              List<JobModel> tenfilteredJobs =
+                                  jobModels.where((job) {
+                                Duration difference = DateTime.now()
+                                    .difference(job.date.toDate());
 
                                 return difference.inDays <= 10;
                               }).toList();
-                              List<JobModel> twofilteredJobs = jobModels.where((job) {
-                                Duration difference = DateTime.now().difference(job.date.toDate());
+                              List<JobModel> twofilteredJobs =
+                                  jobModels.where((job) {
+                                Duration difference = DateTime.now()
+                                    .difference(job.date.toDate());
                                 return difference.inDays <= 20;
                               }).toList();
                               return ListView.separated(
@@ -400,7 +446,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       data: data,
                                                       provider: pro,
                                                       index: index)
-                                                  : pro.type[pro.selectedIndex] == snap.data![index]
+                                                  : pro.type[pro
+                                                              .selectedIndex] ==
+                                                          snap.data![index]
                                                       ? jobCard(
                                                           context: context,
                                                           data: data,
@@ -421,13 +469,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget imageView(String url) {
+Widget imageView(String url,) {
   return CachedNetworkImage(
     imageUrl: url,
     imageBuilder: (context, imageProvider) => Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+        image: DecorationImage(
+         
+          image: imageProvider, fit: BoxFit.cover),
       ),
     ),
     placeholder: (context, url) => Image.asset(
@@ -448,7 +498,12 @@ Widget jobCard(
     required int index}) {
   return InkWell(
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => JobDetails(index: index)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => JobDetails(
+                    model: data,
+                  )));
     },
     child: Consumer<AuthProvider>(builder: (context, auth, child) {
       return Column(
@@ -458,7 +513,9 @@ Widget jobCard(
             child: Container(
               height: 150,
               decoration: BoxDecoration(
-                  color: auth.isdark ? Colors.white.withOpacity(0.1) : Colors.white,
+                  color: auth.isdark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2), // Shadow color
@@ -468,7 +525,8 @@ Widget jobCard(
                   ],
                   borderRadius: BorderRadius.circular(10)),
               child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, top: 10, bottom: 20),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,12 +545,15 @@ Widget jobCard(
                                   BoxShadow(
                                       color: auth.isdark
                                           ? Colors.white.withOpacity(0.2)
-                                          : Colors.grey.withOpacity(0.2), // Shadow color
+                                          : Colors.grey
+                                              .withOpacity(0.2), // Shadow color
                                       blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(0, 3) // Offset of the shadow
+                                      offset: const Offset(
+                                          0, 3) // Offset of the shadow
                                       )
                                 ],
-                                border: Border.all(color: Colors.blue, width: 0.2)),
+                                border:
+                                    Border.all(color: Colors.blue, width: 0.2)),
                             child: imageView(data.companyImage),
                           ),
                           const SizedBox(width: 8),
@@ -503,7 +564,8 @@ Widget jobCard(
                               Text(data.name,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.bodyMedium),
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                               Text(data.type,
                                   style: Theme.of(context)
                                       .textTheme
@@ -513,7 +575,9 @@ Widget jobCard(
                           ),
                           const Spacer(),
                           InkWell(
-                            onTap: () {provider.addToBookMark();},
+                            onTap: () {
+                              provider.addToBookMark();
+                            },
                             //   provider.updateBookmark(
                             //       data.name,
                             //       data.description,
@@ -531,7 +595,9 @@ Widget jobCard(
                               height: 40,
                               width: 40,
                               child: Icon(
-                                data.bookMark ? Icons.bookmark_added : Icons.bookmark_border,
+                                data.bookMark
+                                    ? Icons.bookmark_added
+                                    : Icons.bookmark_border,
                                 color: data.bookMark
                                     ? Colors.blue
                                     : auth.isdark
@@ -560,16 +626,19 @@ Widget jobCard(
                                 borderRadius: BorderRadius.circular(7),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2), // Shadow color
+                                      color: Colors.grey
+                                          .withOpacity(0.2), // Shadow color
                                       blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(0, 3) // Offset of the shadow
+                                      offset: const Offset(
+                                          0, 3) // Offset of the shadow
                                       )
                                 ],
-                                border: Border.all(color: Colors.grey, width: 0.2)),
+                                border:
+                                    Border.all(color: Colors.grey, width: 0.2)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text(data.salary, style: Theme.of(context).textTheme.bodySmall),
+                              child: Text(data.salary,
+                                  style: Theme.of(context).textTheme.bodySmall),
                             ),
                           ),
                           Container(
@@ -578,16 +647,19 @@ Widget jobCard(
                                 borderRadius: BorderRadius.circular(7),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2), // Shadow color
+                                      color: Colors.grey
+                                          .withOpacity(0.2), // Shadow color
                                       blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(0, 3) // Offset of the shadow
+                                      offset: const Offset(
+                                          0, 3) // Offset of the shadow
                                       )
                                 ],
-                                border: Border.all(color: Colors.grey, width: 0.2)),
+                                border:
+                                    Border.all(color: Colors.grey, width: 0.2)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text(data.subtype, style: Theme.of(context).textTheme.bodySmall),
+                              child: Text(data.subtype,
+                                  style: Theme.of(context).textTheme.bodySmall),
                             ),
                           ),
                           Container(
@@ -596,12 +668,15 @@ Widget jobCard(
                                 borderRadius: BorderRadius.circular(7),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2), // Shadow color
+                                      color: Colors.grey
+                                          .withOpacity(0.2), // Shadow color
                                       blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(0, 3) // Offset of the shadow
+                                      offset: const Offset(
+                                          0, 3) // Offset of the shadow
                                       )
                                 ],
-                                border: Border.all(color: Colors.grey, width: 0.2)),
+                                border:
+                                    Border.all(color: Colors.grey, width: 0.2)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Apply",
@@ -785,7 +860,8 @@ PopupMenuItem _buildPopupMenuItem(
   return PopupMenuItem(
     onTap: () {
       if (title == "by deadline") {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const DeadlineScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DeadlineScreen()));
       }
       Provider.of<DashBoardProvider>(context, listen: false).filerValue(title);
     },

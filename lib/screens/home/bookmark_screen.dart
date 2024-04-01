@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:job_circuler/component/custom_imageview.dart';
 import 'package:job_circuler/model/job_model.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
@@ -62,7 +59,7 @@ class BookMarkPage extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => JobDetails(index: index)));
+                                            builder: (context) => JobDetails(model:snapshot.data![index] ,)));
                                   },
                                   child: jobCard(
                                       context: context,
