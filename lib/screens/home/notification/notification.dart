@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:job_circuler/model/notification_model.dart';
+import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,14 +14,14 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<DashBoardProvider>(builder: (context, provider, child) {
+    return Consumer2<DashBoardProvider,AuthProvider>(builder: (context, provider,auth, child) {
       return Scaffold(
           appBar: AppBar(
             title: const Text("Notification"),
             centerTitle: true,
           ),
           body: StreamBuilder<List<NotificationModel>>(
-              stream: provider.getNotification(),
+              stream: provider.getNotification(auth.getUserId().toString()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -33,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                         var data =   snapshot.data![index];
-                          provider.updateNotification(data.id!,data.title!,data.description!,data.user!);
+                          provider.updateNotification(data.id!,auth.userId!);
                           return Container(
                             width: double.infinity,
                             decoration: BoxDecoration(

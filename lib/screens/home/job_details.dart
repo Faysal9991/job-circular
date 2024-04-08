@@ -22,7 +22,6 @@ class _JobDetailsState extends State<JobDetails> {
     double width = MediaQuery.of(context).size.width;
     return Consumer<DashBoardProvider>(builder: (context, provider, child) {
       return Scaffold(
-          backgroundColor: Colors.white.withOpacity(0.9),
           body: SingleChildScrollView(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

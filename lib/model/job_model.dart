@@ -21,7 +21,7 @@ class JobModel {
     String companyImage;
     List<dynamic> list;
     String link;
-    bool bookMark;
+    List<dynamic> bookMark;
     bool popular;
     Timestamp date;
     Timestamp deadline;
@@ -53,7 +53,7 @@ class JobModel {
         companyImage: json["companyImage"],
         list: List<dynamic>.from(json["list"].map((x) => x)),
         link: json["link"],
-        bookMark: json["bookMark"],
+        bookMark: List<dynamic>.from(json["bookMark"].map((x) => x)),
         popular: json["popular"],
         date: json["date"],
         deadline:json["deadline"],

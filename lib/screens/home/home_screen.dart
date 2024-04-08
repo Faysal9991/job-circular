@@ -28,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     var provider = Provider.of<DashBoardProvider>(context, listen: false);
-    Provider.of<DashBoardProvider>(context, listen: false).getAllFood();
-    Provider.of<AdminProvider>(context, listen: false).init();
+    Provider.of<DashBoardProvider>(context, listen: false).getJobs();
+    Provider.of<AuthProvider>(context, listen: false).getUserId();
     controller.addListener(() {
       provider.addtoSearch(controller.text);
     });
@@ -94,47 +94,55 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: StreamBuilder<List<NotificationModel>>(
-                  stream: pro.getNotification(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      for (int i = 0; i < snapshot.data!.length; i++) {
-                        if (snapshot.data![i].user!.contains(auth.userId)) {
-                          pro.showNotification(true);
+                stream: pro.getNotification(auth.getUserId().toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // Process notifications to determine if any matches the current user
+                    final List<NotificationModel>? notifications =
+                        snapshot.data;
+                    if (notifications != null) {
+                      bool hasNotificationForCurrentUser = false;
+                      for (int i = 0; i < notifications.length; i++) {
+                        if (notifications[i].user!.contains(auth.userId)) {
+                          hasNotificationForCurrentUser = true;
+                          break;
                         }
                       }
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NotificationScreen()));
-                        },
-                        child: badges.Badge(
-                          badgeContent: pro.isShowNotification
-                              ? null
-                              : Text(
-                                  snapshot.data == null
-                                      ? ""
-                                      : snapshot.data!.length.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                          child: SvgPicture.asset(
-                            "assets/svg/notification.svg",
-                          ),
-                        ),
-                      );
+                      pro.showNotification(hasNotificationForCurrentUser);
                     }
-                  }),
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const NotificationScreen()),
+                        );
+                      },
+                      child: badges.Badge(
+                        badgeContent: pro.isShowNotification
+                            ? null
+                            : Text(
+                                notifications!.length.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                        child: SvgPicture.asset(
+                          "assets/svg/notification.svg",
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
             const SizedBox(
               width: 10,
@@ -148,7 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 50,
               ),
-
               StreamBuilder<List<Menu>>(
                   stream: pro.getMenu(),
                   builder: (context, snapshot) {
@@ -206,91 +213,93 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         });
                   }),
-Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
-                StreamBuilder<List<String>>(
-                stream: pro.getCategoryListStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: snapshot.data!.length,
-                          separatorBuilder: (ctx, idx) {
-                            return const SizedBox(
-                              height: 10,
-                            );
-                          },
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    pro.chanageIndex(index);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FromDrawerScreen(
-                    categoryName:  snapshot.data![index],
-                  )));
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(5),
-                                        color:Colors.blue
-                                            
-                                          ,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: pro.selectedIndex ==
-                                                      index
-                                                  ? Colors.black
-                                                      .withOpacity(0.5)
-                                                  : Colors.grey.withOpacity(
-                                                      0.2), // Shadow color
-                                              blurRadius:
-                                                  10, // Spread of the shadow
-                                              offset: const Offset(0,
-                                                  3) // Offset of the shadow
-                                              )
-                                        ],
-                                        border: Border.all(
-                                            color: pro.selectedIndex == index
-                                                ? Colors.white
-                                                : Colors.grey,
-                                            width: 0.2)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Text(
-                                        snapshot.data![index],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color:
-                                                    pro.selectedIndex == index
-                                                        ? Colors.white
-                                                        : auth.isdark
-                                                            ? Colors.black
-                                                            : Colors.grey),
+              Text(
+                "All category",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              StreamBuilder<List<String>>(
+                  stream: pro.getCategoryListStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: ListView.separated(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data!.length,
+                            separatorBuilder: (ctx, idx) {
+                              return const SizedBox(
+                                height: 10,
+                              );
+                            },
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      pro.chanageIndex(index);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FromDrawerScreen(
+                                                    categoryName:
+                                                        snapshot.data![index],
+                                                  )));
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.blue,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: pro.selectedIndex ==
+                                                        index
+                                                    ? Colors.black
+                                                        .withOpacity(0.5)
+                                                    : Colors.grey.withOpacity(
+                                                        0.2), // Shadow color
+                                                blurRadius:
+                                                    10, // Spread of the shadow
+                                                offset: const Offset(0,
+                                                    3) // Offset of the shadow
+                                                )
+                                          ],
+                                          border: Border.all(
+                                              color: pro.selectedIndex == index
+                                                  ? Colors.white
+                                                  : Colors.grey,
+                                              width: 0.2)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          snapshot.data![index],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color:
+                                                      pro.selectedIndex == index
+                                                          ? Colors.white
+                                                          : auth.isdark
+                                                              ? Colors.black
+                                                              : Colors.grey),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }),
-                    );
-                  }
-                }),
-                
+                                ],
+                              );
+                            }),
+                      );
+                    }
+                  }),
             ],
           ),
         ),
@@ -320,7 +329,7 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: StreamBuilder<List<JobModel>>(
-                      stream: pro.getAllFood(),
+                      stream: pro.getJobs(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -347,7 +356,8 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
                                           context: context,
                                           data: jobModels[index],
                                           provider: pro,
-                                          index: index),
+                                          index: index,
+                                          auth: auth),
                                     )
                                   : const SizedBox.shrink();
                             }),
@@ -453,7 +463,7 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
             Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: StreamBuilder<List<JobModel>>(
-                  stream: pro.getAllFood(),
+                  stream: pro.getJobs(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
@@ -514,25 +524,29 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
                                           context: context,
                                           data: threedaysJobList[index],
                                           provider: pro,
-                                          index: index)
+                                          index: index,
+                                          auth: auth)
                                       : pro.lastTenDays
                                           ? jobCard(
                                               context: context,
                                               data: tenfilteredJobs[index],
                                               provider: pro,
-                                              index: index)
+                                              index: index,
+                                              auth: auth)
                                           : pro.lastTwineDays
                                               ? jobCard(
                                                   context: context,
                                                   data: twofilteredJobs[index],
                                                   provider: pro,
-                                                  index: index)
+                                                  index: index,
+                                                  auth: auth)
                                               : pro.selectedIndex == 0
                                                   ? jobCard(
                                                       context: context,
                                                       data: data,
                                                       provider: pro,
-                                                      index: index)
+                                                      index: index,
+                                                      auth: auth)
                                                   : pro.type[pro
                                                               .selectedIndex] ==
                                                           snap.data![index]
@@ -540,7 +554,8 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
                                                           context: context,
                                                           data: data,
                                                           provider: pro,
-                                                          index: index)
+                                                          index: index,
+                                                          auth: auth)
                                                       : const SizedBox.shrink();
                                 },
                               );
@@ -556,15 +571,15 @@ Text("All category",style: Theme.of(context).textTheme.bodyLarge,),
   }
 }
 
-Widget imageView(String url,) {
+Widget imageView(
+  String url,
+) {
   return CachedNetworkImage(
     imageUrl: url,
     imageBuilder: (context, imageProvider) => Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        image: DecorationImage(
-         
-          image: imageProvider, fit: BoxFit.cover),
+        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
       ),
     ),
     placeholder: (context, url) => Image.asset(
@@ -582,6 +597,7 @@ Widget jobCard(
     {required BuildContext context,
     required JobModel data,
     required DashBoardProvider provider,
+    required AuthProvider auth,
     required int index}) {
   return InkWell(
     onTap: () {
@@ -663,29 +679,27 @@ Widget jobCard(
                           const Spacer(),
                           InkWell(
                             onTap: () {
-                              provider.addToBookMark();
+                              provider.updateBookmark(
+                                  data.name,
+                                  data.description,
+                                  data.id,
+                                  data.type,
+                                  data.subtype,
+                                  data.salary,
+                                  data.jobDetails,
+                                  data.companyImage,
+                                  data.list,
+                                  data.link,
+                                  data.bookMark);
                             },
-                            //   provider.updateBookmark(
-                            //       data.name,
-                            //       data.description,
-                            //       data.id,
-                            //       data.type,
-                            //       data.subtype,
-                            //       data.salary,
-                            //       data.jobDetails,
-                            //       data.companyImage,
-                            //       data.list,
-                            //       data.link,
-                            //       data.bookMark);
-                            // },
                             child: SizedBox(
                               height: 40,
                               width: 40,
                               child: Icon(
-                                data.bookMark
+                                data.bookMark.contains("${auth.userId}")
                                     ? Icons.bookmark_added
                                     : Icons.bookmark_border,
-                                color: data.bookMark
+                                color: data.bookMark.contains("${auth.userId}")
                                     ? Colors.blue
                                     : auth.isdark
                                         ? Colors.white

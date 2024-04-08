@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               .signIn(emailController.text, passwordController.text)
                                               .then((value) {
                                             if (value) {
-                                              Navigator.of(context).push(MaterialPageRoute(
+                                              Navigator.of(context).pushReplacement(MaterialPageRoute(
                                                   builder: (context) => DashboardScreen()));
                                             }
                                           });

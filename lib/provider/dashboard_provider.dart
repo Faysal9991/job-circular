@@ -13,7 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DashBoardProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final CollectionReference _jobdata = FirebaseFirestore.instance.collection('jobFields');
+  final CollectionReference _jobdata =
+      FirebaseFirestore.instance.collection('jobFields');
   final List<String> type = [
     "All",
     "Govt",
@@ -30,7 +31,7 @@ class DashBoardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<List<JobModel>> getAllFood() {
+  Stream<List<JobModel>> getJobs() {
     return _jobdata.snapshots().map((QuerySnapshot querySnapshot) {
       return querySnapshot.docs.map((QueryDocumentSnapshot documentSnapshot) {
         return JobModel(
@@ -44,7 +45,7 @@ class DashBoardProvider with ChangeNotifier {
             companyImage: documentSnapshot.get('companyImage') ?? "",
             list: documentSnapshot.get('list') ?? [],
             link: documentSnapshot.get('link') ?? "",
-            bookMark: documentSnapshot.get('bookMark') ?? false,
+            bookMark: documentSnapshot.get('bookMark') ?? [],
             popular: documentSnapshot.get('popular') ?? false,
             date: documentSnapshot.get('date'),
             deadline: documentSnapshot.get('deadline'));
@@ -52,23 +53,36 @@ class DashBoardProvider with ChangeNotifier {
     });
   }
 
-  final CollectionReference _notification = FirebaseFirestore.instance.collection('notification');
+  final CollectionReference _notification =
+      FirebaseFirestore.instance.collection('notification');
 
   bool isShowNotification = false;
   showNotification(bool value) {
-    isShowNotification = value;
-    notifyListeners();
+    Future.delayed(Duration.zero).then((value) {
+      isShowNotification = value;
+      notifyListeners();
+    });
   }
 
-  Stream<List<NotificationModel>> getNotification() {
+  Stream<List<NotificationModel>> getNotification(String userID) {
     return _notification.snapshots().map((QuerySnapshot querySnapshot) {
-      return querySnapshot.docs.map((QueryDocumentSnapshot documentSnapshot) {
-        return NotificationModel(
+      List<NotificationModel> notifications = [];
+      querySnapshot.docs.forEach((QueryDocumentSnapshot documentSnapshot) {
+        List<dynamic> users = documentSnapshot.get('user') ?? [];
+        if (users.contains(userID)) {
+          showNotification(true);
+        }
+
+        if (isShowNotification) {
+          notifications.add(NotificationModel(
             title: documentSnapshot.get('title') ?? "",
             description: documentSnapshot.get('description') ?? "",
-            user: documentSnapshot.get('user') ?? "",
-            id: documentSnapshot.id);
-      }).toList();
+            user: documentSnapshot.get('user') ?? [],
+            id: documentSnapshot.id,
+          ));
+        }
+      });
+      return notifications;
     });
   }
 
@@ -76,72 +90,68 @@ class DashBoardProvider with ChangeNotifier {
   //*----------come here
   updateNotification(
     String id,
-    String title,
-    String description,
-    List user,
+    String userID,
   ) async {
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.get("userId")==null||sharedPreferences.get("userId")==""){
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    if (sharedPreferences.get("userId") == null ||
+        sharedPreferences.get("userId") == "") {
       EasyLoading.showToast("Please Login First!");
-    }else{
-      user.add(sharedPreferences.get("userId"));
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    _notification.doc(id).update({
-      "title": title,
-      "description": description,
-      "user": user,
-    });
+    } else {
+      _notification.doc(id).update({
+        "user": FieldValue.arrayUnion([userID]),
+      });
     }
-    
   }
 
+  bool mark = false;
+  Future<void> updateBookmark(
+    String jobName,
+    String description,
+    String id,
+    String type,
+    String subtype,
+    String salary,
+    String jobDetails,
+    String companyImage,
+    List list,
+    String link,
+    List bookmark,
+  ) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    String userId = sharedPreferences.getString("userId") ?? '';
 
-
- addToBookMark()async{
-  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.get("userId")==null||sharedPreferences.get("userId")==""){
+    if (userId.isEmpty) {
       EasyLoading.showToast("Please Login First!");
-    }else{
-String? userId = sharedPreferences.getString("userId");
-       await firestore.collection('users').doc(userId).update({"bookmark":"true"});
-    }
-     
+    } else {
+      // Toggle the bookmark status
+      mark = !mark;
 
- }
-  updateBookmark(
-      String jobName,
-      String description,
-      String id,
-      String type,
-      String subtype,
-      String salary,
-      String jobDetails,
-      String companyImage,
-      List list,
-      String link,
-      bool bookmark)async {
-   
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-        final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      try {
+        // Get Firestore instance
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      if(sharedPreferences.get("userId")==null||sharedPreferences.get("userId")==""){
-      EasyLoading.showToast("Please Login First!");
-    }else{
-       bool mark = !bookmark;
-      firestore.collection("jobFields").doc(id).update({
-      "name": jobName,
-      "description": description,
-      "id": id,
-      "type": type,
-      "subtype": subtype,
-      "salary": salary,
-      "jobDetails": jobDetails,
-      "companyImage": companyImage,
-      "list": list,
-      "link": link,
-      "bookMark": mark,
-    });
- 
+        // Get the document reference
+        DocumentReference docRef = firestore.collection("jobFields").doc(id);
+
+        // Update the bookmark status
+        if (mark) {
+          // Add the user ID to the bookmark list
+          await docRef.update({
+            "bookMark": FieldValue.arrayUnion([userId]),
+          });
+          print("Bookmark added successfully.");
+        } else {
+          // Remove the user ID from the bookmark list
+          await docRef.update({
+            "bookMark": FieldValue.arrayRemove([userId]),
+          });
+          print("Bookmark removed successfully.");
+        }
+      } catch (error) {
+        print("Failed to update bookmark: $error");
+      }
     }
   }
 
@@ -155,7 +165,7 @@ String? userId = sharedPreferences.getString("userId");
 
   void configureFirebaseMessaging() {
     _firebaseMessaging.getToken().then((token) {});
-     
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _showLocalNotification(
         message.notification?.title ?? "Notification",
@@ -181,7 +191,8 @@ String? userId = sharedPreferences.getString("userId");
   }
 
   Future<void> _showLocalNotification(String title, String body) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
       'your_channel_id', // Change to your own channel ID
       'your_channel_name', // Change to your own channel name // Change to your own channel description
       importance: Importance.max,
@@ -257,15 +268,19 @@ String? userId = sharedPreferences.getString("userId");
 
   Stream<List<String>> getCategoryListStream() {
     // Get the document reference
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('category').doc('EEJyW5MD5xIECYYEEkFH');
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('category')
+        .doc('EEJyW5MD5xIECYYEEkFH');
 
     // Return a stream that listens to changes on the document reference
-    return documentReference.snapshots().map((DocumentSnapshot documentSnapshot) {
+    return documentReference
+        .snapshots()
+        .map((DocumentSnapshot documentSnapshot) {
       // Check if the document exists and contains the jobCategory field
       if (documentSnapshot.exists && documentSnapshot.data() != null) {
         // Get the list of strings from the jobCategory field
-        List<String>? jobCategoryList = List<String>.from(documentSnapshot.get('jobCategory'));
+        List<String>? jobCategoryList =
+            List<String>.from(documentSnapshot.get('jobCategory'));
         return jobCategoryList;
       } else {
         // Document doesn't exist or jobCategory field is empty
@@ -274,7 +289,8 @@ String? userId = sharedPreferences.getString("userId");
     });
   }
 
-  final CollectionReference _menu = FirebaseFirestore.instance.collection('menu');
+  final CollectionReference _menu =
+      FirebaseFirestore.instance.collection('menu');
 
   Stream<List<Menu>> getMenu() {
     return _menu.snapshots().map((QuerySnapshot querySnapshot) {
@@ -325,8 +341,8 @@ String? userId = sharedPreferences.getString("userId");
 
   List<String> deadlineFilter = [
     "Today",
-    "Tomorrow" 
-    "Last three days",
+    "Tomorrow"
+        "Last three days",
     "Last ten days",
   ];
   int selectedDeadlineFilterName = 0;

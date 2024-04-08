@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/auth/login.dart';
+import 'package:job_circuler/screens/home/dashboard_Screen.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -177,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           .then((value) {
                                         if (value) {
                                           Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => HomeScreen()));
+                                              builder: (context) => DashboardScreen()));
                                         }
                                       });
                                     }
