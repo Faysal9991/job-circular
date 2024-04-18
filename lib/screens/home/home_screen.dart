@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:job_circuler/model/job_model.dart';
 import 'package:job_circuler/model/menu.dart';
 import 'package:job_circuler/model/notification_model.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
-import 'package:job_circuler/screens/admin/provider/admin_provider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:job_circuler/screens/home/deadlineFilter.dart';
 import 'package:job_circuler/screens/home/from_drawer.dart';
@@ -14,7 +14,6 @@ import 'package:job_circuler/screens/home/job_details.dart';
 import 'package:job_circuler/screens/home/notification/notification.dart';
 import 'package:job_circuler/screens/home/search_job.dart';
 import 'package:job_circuler/screens/menu_details.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasNotificationForCurrentUser = false;
+
     return Consumer2<DashBoardProvider, AuthProvider>(
         builder: (context, pro, auth, child) {
       return Scaffold(
@@ -105,14 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     final List<NotificationModel>? notifications =
                         snapshot.data;
                     if (notifications != null) {
-                      bool hasNotificationForCurrentUser = false;
+                      hasNotificationForCurrentUser = false;
                       for (int i = 0; i < notifications.length; i++) {
                         if (notifications[i].user!.contains(auth.userId)) {
                           hasNotificationForCurrentUser = true;
                           break;
                         }
                       }
-                      pro.showNotification(hasNotificationForCurrentUser);
                     }
                     return InkWell(
                       onTap: () {
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                       child: badges.Badge(
-                        badgeContent: pro.isShowNotification
+                        badgeContent: hasNotificationForCurrentUser
                             ? null
                             : Text(
                                 notifications!.length.toString(),
@@ -152,6 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: Drawer(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 50,
@@ -159,63 +161,77 @@ class _HomeScreenState extends State<HomeScreen> {
               StreamBuilder<List<Menu>>(
                   stream: pro.getMenu(),
                   builder: (context, snapshot) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount:
-                            snapshot.data == null ? 0 : snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MenuDetails(
-                                              name:
-                                                  snapshot.data![index].name ??
-                                                      "",
-                                              description: snapshot
-                                                      .data![index].details ??
-                                                  "",
-                                            )));
-                              },
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        "${snapshot.data![index].name}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                    return Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              snapshot.data == null ? 0 : snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MenuDetails(
+                                                name:
+                                                    snapshot.data![index].name ??
+                                                        "",
+                                                description: snapshot
+                                                        .data![index].details ??
+                                                    "",
+                                              )));
+                                },
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(Icons.circle_rounded,color: Colors.black,size: 12,),
+                                          SizedBox(width: 15,),
+                                          Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            "${snapshot.data![index].name}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Divider(
-                                      color: auth.isdark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    )
-                                  ],
+                                      Divider(
+                                        color: auth.isdark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                        });
+                              );
+                            }
+                          }),
+                    );
                   }),
-              Text(
-                "All category",
-                style: Theme.of(context).textTheme.bodyLarge,
+                    const SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Text(
+                  "All category",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+                const SizedBox(
+                height: 10,
               ),
               StreamBuilder<List<String>>(
                   stream: pro.getCategoryListStream(),
@@ -238,6 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             itemBuilder: (context, index) {
                               return Column(
+                                   mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () {
@@ -251,49 +269,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         snapshot.data![index],
                                                   )));
                                     },
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.blue,
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: pro.selectedIndex ==
-                                                        index
-                                                    ? Colors.black
-                                                        .withOpacity(0.5)
-                                                    : Colors.grey.withOpacity(
-                                                        0.2), // Shadow color
-                                                blurRadius:
-                                                    10, // Spread of the shadow
-                                                offset: const Offset(0,
-                                                    3) // Offset of the shadow
-                                                )
-                                          ],
-                                          border: Border.all(
-                                              color: pro.selectedIndex == index
-                                                  ? Colors.white
-                                                  : Colors.grey,
-                                              width: 0.2)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
+                                    child: Row(
+                                      children: [
+                                               Icon(Icons.circle_rounded,color: Colors.black,size: 12,),
+                                          SizedBox(width: 15,),
+                                        Text(
                                           snapshot.data![index],
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium!
-                                              .copyWith(
-                                                  color:
-                                                      pro.selectedIndex == index
-                                                          ? Colors.white
-                                                          : auth.isdark
-                                                              ? Colors.black
-                                                              : Colors.grey),
+                                              
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ),
+                                    Divider(
+                                      color: auth.isdark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )
                                 ],
                               );
                             }),
@@ -680,17 +674,9 @@ Widget jobCard(
                           InkWell(
                             onTap: () {
                               provider.updateBookmark(
-                                  data.name,
-                                  data.description,
+                                 
                                   data.id,
-                                  data.type,
-                                  data.subtype,
-                                  data.salary,
-                                  data.jobDetails,
-                                  data.companyImage,
-                                  data.list,
-                                  data.link,
-                                  data.bookMark);
+                                );
                             },
                             child: SizedBox(
                               height: 40,
@@ -780,7 +766,7 @@ Widget jobCard(
                                     Border.all(color: Colors.grey, width: 0.2)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Apply",
+                              child: Text(DateFormat("dd-MM-yyyy").format(data.deadline.toDate()),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!

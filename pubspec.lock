@@ -726,7 +726,7 @@ packages:
     source: hosted
     version: "0.2.1+1"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
@@ -909,14 +909,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
-  photo_view:
-    dependency: "direct main"
-    description:
-      name: photo_view
-      sha256: "8036802a00bae2a78fc197af8a158e3e2f7b500561ed23b4c458107685e645bb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.14.0"
   platform:
     dependency: transitive
     description:
@@ -1250,6 +1242,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
+  widget_zoom:
+    dependency: "direct main"
+    description:
+      name: widget_zoom
+      sha256: f74cb1b9969a74668db0048d3db9ddc7ec5b334d32a1f54475db56f873114550
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   win32:
     dependency: transitive
     description:

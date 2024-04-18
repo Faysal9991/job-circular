@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:job_circuler/component/custom_imageview.dart';
 import 'package:job_circuler/model/job_model.dart';
+import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:job_circuler/screens/home/webview_page.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 class JobDetails extends StatefulWidget {
   final JobModel model;
@@ -20,7 +22,8 @@ class _JobDetailsState extends State<JobDetails> {
   Widget build(BuildContext context) {
     double hight = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Consumer<DashBoardProvider>(builder: (context, provider, child) {
+    return Consumer2<DashBoardProvider, AuthProvider>(
+        builder: (context, provider, auth, child) {
       return Scaffold(
           body: SingleChildScrollView(
               child: Column(
@@ -111,8 +114,10 @@ class _JobDetailsState extends State<JobDetails> {
                         widget.model.subtype == "Full time" ? true : false),
                     roundContainer(context, "part Time",
                         widget.model.subtype == "part Time" ? true : false),
-                    roundContainer(context, "any where",
-                        widget.model.subtype == "any where" ? true : false)
+                    roundContainer(
+                        context,
+                        "${DateFormat("dd-MM-yyyy").format(widget.model.deadline.toDate())}",
+                        false)
                   ],
                 ),
               ),
@@ -168,9 +173,10 @@ class _JobDetailsState extends State<JobDetails> {
                         color: Colors.white,
                         height: 200,
                         child: Center(
-                            child: PhotoView(
-                                imageProvider:
-                                    NetworkImage(widget.model.list[index]))));
+                            child: WidgetZoom(
+                                heroAnimationTag: '${index}',
+                                zoomWidget:
+                                    Image.network(widget.model.list[index]))));
                   })
             ],
           )),
@@ -179,20 +185,39 @@ class _JobDetailsState extends State<JobDetails> {
             child: Row(children: [
               Expanded(
                 flex: 2,
-                child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.black.withOpacity(0.2),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SvgPicture.asset(
-                        "assets/svg/bookmark.svg",
-                        color: Colors.black,
+                child: InkWell(
+                  onTap: () {
+                    provider.updateBookmark(
+                      widget.model.id,
+                    );
+                
+                  },
+                  child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.black.withOpacity(0.2),
                       ),
-                    )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: Icon(
+                           provider.detailsBookmark
+                                ? Icons.bookmark_added
+                                : Icons.bookmark_border,
+                            color:
+                                provider.detailsBookmark
+                                    ? Colors.blue
+                                    : auth.isdark
+                                        ? Colors.white
+                                        : Colors.black,
+                          ),
+                        ),
+                      )),
+                ),
               ),
               const Expanded(child: SizedBox()),
               Expanded(

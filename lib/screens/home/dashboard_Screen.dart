@@ -17,6 +17,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+     Provider.of<AuthProvider>(context,listen:  false).getUserDetails();
+    super.initState();
+  }
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookMarkPage(),

@@ -131,94 +131,66 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
               const Divider(),
               Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: StreamBuilder<List<JobModel>>(
-                      stream: provider.getJobs(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          // Use the data from the stream
-                          List<JobModel> jobModels = snapshot.data!;
-                          List<JobModel> today = jobModels.where((job) {
-                            Duration difference = job.deadline
-                                .toDate()
-                                .difference(DateTime.now());
-                            return difference.inDays <= 0;
-                          }).toList();
+                  child:StreamBuilder<List<JobModel>>(
+  stream: provider.getJobs(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator();
+    } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else {
+      // Use the data from the stream
+      List<JobModel> jobModels = snapshot.data!;
+      
+      // Filter jobs based on selected filter name
+      List<JobModel> filteredJobs = [];
 
-                          List<JobModel> tomorrow = jobModels.where((job) {
-                            Duration difference = job.deadline
-                                .toDate()
-                                .difference(DateTime.now());
-                            return difference.inDays <= 1;
-                          }).toList();
+      if (provider.selectedDeadlineFilterName == 0) {
+        // Show jobs with today's deadline or earlier
+        filteredJobs = jobModels.where((job) {
+          Duration difference = job.deadline.toDate().difference(DateTime.now());
+          return difference.inDays == 0;
+        }).toList();
+      } else if (provider.selectedDeadlineFilterName == 1) {
+        // Show jobs with tomorrow's deadline or earlier
+        filteredJobs = jobModels.where((job) {
+          Duration difference = job.deadline.toDate().difference(DateTime.now());
+          return difference.inDays >= -1;
+        }).toList();
+      } else if (provider.selectedDeadlineFilterName == 2) {
+        // Show jobs with deadline within the next 3 days or earlier
+        filteredJobs = jobModels.where((job) {
+          Duration difference = job.deadline.toDate().difference(DateTime.now());
+          return difference.inDays >= -3;
+        }).toList();
+      } else if (provider.selectedDeadlineFilterName == 3) {
+        // Show jobs with deadline within the next 10 days or earlier
+        filteredJobs = jobModels.where((job) {
+          Duration difference = job.deadline.toDate().difference(DateTime.now());
+          return difference.inDays >= -10;
+        }).toList();
+      }
 
-                          List<JobModel> threeDays = jobModels.where((job) {
-                            Duration difference = job.deadline
-                                .toDate()
-                                .difference(DateTime.now());
-                            return difference.inDays <= 3;
-                          }).toList();
-
-                          List<JobModel> tenDays = jobModels.where((job) {
-                            Duration difference = job.deadline
-                                .toDate()
-                                .difference(DateTime.now());
-                            return difference.inDays <= 10;
-                          }).toList();
-
-                          return ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: provider.selectedDeadlineFilterName ==
-                                      0
-                                  ? today.length
-                                  : provider.selectedDeadlineFilterName == 1
-                                      ? tomorrow.length
-                                      : provider.selectedDeadlineFilterName == 2
-                                          ? threeDays.length
-                                          : tenDays.length,
-                              separatorBuilder: (ctx, idx) {
-                                return const SizedBox(
-                                  height: 10,
-                                );
-                              },
-                              itemBuilder: (cont, index) => provider
-                                          .selectedDeadlineFilterName ==
-                                      0
-                                  ? jobCard(
-                                      context: context,
-                                      data: today[index],
-                                      provider: provider,
-                                      index: index,
-                                      auth: auth)
-                                  : provider.selectedDeadlineFilterName == 1
-                                      ? jobCard(
-                                          context: context,
-                                          data: tomorrow[index],
-                                          provider: provider,
-                                          index: index,
-                                          auth: auth)
-                                      : provider.selectedDeadlineFilterName == 2
-                                          ? jobCard(
-                                              context: context,
-                                              data: threeDays[index],
-                                              provider: provider,
-                                              index: index,
-                                              auth: auth)
-                                          : jobCard(
-                                              context: context,
-                                              data: tenDays[index],
-                                              provider: provider,
-                                              index: index,
-                                              auth: auth));
-                        }
-                      }))
-            ],
+      return ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: filteredJobs.length,
+        separatorBuilder: (ctx, idx) {
+          return const SizedBox(height: 10);
+        },
+        itemBuilder: (cont, index) => jobCard(
+          context: context,
+          data: filteredJobs[index],
+          provider: provider,
+          index: index,
+          auth: auth
+        )
+      );
+    }
+  }
+))
+  ],
           ),
         ),
       );

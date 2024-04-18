@@ -58,18 +58,17 @@ class DashBoardProvider with ChangeNotifier {
 
   bool isShowNotification = false;
   showNotification(bool value) {
-    Future.delayed(Duration.zero).then((value) {
-      isShowNotification = value;
-      notifyListeners();
-    });
+    isShowNotification = value;
+    notifyListeners();
   }
 
   Stream<List<NotificationModel>> getNotification(String userID) {
     return _notification.snapshots().map((QuerySnapshot querySnapshot) {
       List<NotificationModel> notifications = [];
       querySnapshot.docs.forEach((QueryDocumentSnapshot documentSnapshot) {
-        List<dynamic> users = documentSnapshot.get('user') ?? [];
-        if (users.contains(userID)) {
+        List<dynamic>? users = documentSnapshot.get('user') ?? [];
+        if (users != null && users.contains(userID)) {
+          // Check if users is not null before accessing its elements
           showNotification(true);
         }
 
@@ -77,7 +76,8 @@ class DashBoardProvider with ChangeNotifier {
           notifications.add(NotificationModel(
             title: documentSnapshot.get('title') ?? "",
             description: documentSnapshot.get('description') ?? "",
-            user: documentSnapshot.get('user') ?? [],
+            user: documentSnapshot.get('user') ??
+                [], // Provide a default value in case 'user' is null
             id: documentSnapshot.id,
           ));
         }
@@ -105,18 +105,9 @@ class DashBoardProvider with ChangeNotifier {
   }
 
   bool mark = false;
+  bool detailsBookmark = false;
   Future<void> updateBookmark(
-    String jobName,
-    String description,
     String id,
-    String type,
-    String subtype,
-    String salary,
-    String jobDetails,
-    String companyImage,
-    List list,
-    String link,
-    List bookmark,
   ) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
@@ -137,22 +128,32 @@ class DashBoardProvider with ChangeNotifier {
 
         // Update the bookmark status
         if (mark) {
+          detailsBookmark = true;
+
           // Add the user ID to the bookmark list
           await docRef.update({
             "bookMark": FieldValue.arrayUnion([userId]),
           });
           print("Bookmark added successfully.");
+          notifyListeners();
         } else {
           // Remove the user ID from the bookmark list
           await docRef.update({
             "bookMark": FieldValue.arrayRemove([userId]),
           });
           print("Bookmark removed successfully.");
+          detailsBookmark = false;
+          notifyListeners();
         }
       } catch (error) {
         print("Failed to update bookmark: $error");
       }
     }
+  }
+
+  changeBookmark() {
+    bookmark = false;
+    notifyListeners();
   }
 
   String search = "";

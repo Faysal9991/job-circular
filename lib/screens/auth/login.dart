@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/admin/admin_first_screen.dart';
+import 'package:job_circuler/screens/auth/forget_password.dart';
 import 'package:job_circuler/screens/auth/sign_up.dart';
 import 'package:job_circuler/screens/home/dashboard_Screen.dart';
 import 'package:job_circuler/screens/home/home_screen.dart';
@@ -126,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     controller: passwordController,
                                     prefixIconUrl: Icons.lock_open_outlined,
                                     isShowPrefixIcon: true,
+                                  
                                     validation: (password) {
                                       if (password!.isEmpty) {
                                         return "please enter your password";
@@ -137,8 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fillColor: Colors.white,
                                     isShowBorder: true,
                                     verticalSize: 15,
+                                    
                                     horizontalSize: 20,
                                     hintText: "Password",
+                                      isPassword: true,
+                                      isShowSuffixIcon:true,
                                   )),
                               GestureDetector(
                                 child: Container(
@@ -178,6 +183,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               const SizedBox(
                                 height: 40,
+                              ),
+                              InkWell(
+                                onTap: (){
+                                   Navigator.of(context).push(MaterialPageRoute(
+                                                  builder: (context) => const ForgetPassword()));
+                                },
+                                child: Text("Forget password",
+                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                              fontSize: 15,
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold)),
                               ),
                               const Divider(),
                               Text("or continue with",

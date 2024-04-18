@@ -16,11 +16,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
-  void initState() {
-    Provider.of<AuthProvider>(context,listen:  false).getLoginAccess();
-    super.initState();
-    
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   trailing: Switch.adaptive(
                     value: provider.isdark,
                     onChanged: (value) {
-                      print("sbjkbvjkbvjkbev  ${value}");
-provider.changeTheme(value);
+                      provider.changeTheme(value);
                     },
                   ),
                 ),
@@ -145,7 +140,7 @@ provider.changeTheme(value);
                 settingsGroupTitle: "Account",
                 items: [
                   
-                provider.isLogin?  SettingsItem(
+                provider.userModel.email!=null?  SettingsItem(
                     onTap: () {
                       provider.logout();
                       Navigator.of(context).pushReplacement(
