@@ -80,19 +80,34 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  updateUserName(String username) async {
+    EasyLoading.show();
+    try {
+      await firestore
+          .collection("users")
+          .doc(userId)
+          .update({"userName": username});
+    } catch (e) {
+      EasyLoading.showError("e");
+    }
+    getUserDetails();
+    EasyLoading.showSuccess("Updated");
+    notifyListeners();
+  }
+
   getUserDetails() async {
     isLoading = true;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString("userId") == null) {
       EasyLoading.showInfo("create account please");
-    }else{
-       String id = prefs.getString("userId")!;
-    await firestore.collection("users").doc(id).get().then((value) {
-      userModel = UserModel.fromJson(value.data() as Map<String, dynamic>);
+    } else {
+      String id = prefs.getString("userId")!;
+      await firestore.collection("users").doc(id).get().then((value) {
+        userModel = UserModel.fromJson(value.data() as Map<String, dynamic>);
 
-      isLoading = false;
-      notifyListeners();
-    });
+        isLoading = false;
+        notifyListeners();
+      });
     }
   }
 

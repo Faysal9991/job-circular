@@ -8,6 +8,7 @@ import 'package:job_circuler/model/notification_model.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/provider/dashboard_provider.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:job_circuler/screens/home/calculator.dart';
 import 'package:job_circuler/screens/home/deadlineFilter.dart';
 import 'package:job_circuler/screens/home/from_drawer.dart';
 import 'package:job_circuler/screens/home/job_details.dart';
@@ -44,9 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         extendBody: true,
         appBar: AppBar(
+      
+       
           elevation: 0,
           backgroundColor: Colors.white.withOpacity(0.3),
           actions: [
+            Spacer(),
+            Text("BD JOB CIRCULAR",style: Theme.of(context).textTheme.labelLarge,),
             const Spacer(),
             Row(
               children: [
@@ -162,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   stream: pro.getMenu(),
                   builder: (context, snapshot) {
                     return Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -181,9 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => MenuDetails(
-                                                name:
-                                                    snapshot.data![index].name ??
-                                                        "",
+                                                name: snapshot
+                                                        .data![index].name ??
+                                                    "",
                                                 description: snapshot
                                                         .data![index].details ??
                                                     "",
@@ -193,12 +198,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: double.infinity,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
-                                          Icon(Icons.circle_rounded,color: Colors.black,size: 12,),
-                                          SizedBox(width: 15,),
+                                          Icon(
+                                            Icons.circle_rounded,
+                                            color: Colors.black,
+                                            size: 12,
+                                          ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
                                           Text(
                                             overflow: TextOverflow.ellipsis,
                                             "${snapshot.data![index].name}",
@@ -221,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }),
                     );
                   }),
-                    const SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Center(
@@ -230,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
-                const SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               StreamBuilder<List<String>>(
@@ -254,8 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                             itemBuilder: (context, index) {
                               return Column(
-                                   mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () {
@@ -271,29 +283,64 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     child: Row(
                                       children: [
-                                               Icon(Icons.circle_rounded,color: Colors.black,size: 12,),
-                                          SizedBox(width: 15,),
-                                        Text(
-                                          snapshot.data![index],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              
+                                        Icon(
+                                          Icons.circle_rounded,
+                                          color: Colors.black,
+                                          size: 12,
                                         ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(snapshot.data![index],
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!),
                                       ],
                                     ),
                                   ),
-                                    Divider(
-                                      color: auth.isdark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    )
+                                  Divider(
+                                    color: auth.isdark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  )
                                 ],
                               );
                             }),
                       );
                     }
                   }),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const CalculatorScreen()));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.circle_rounded,
+                            color: Colors.black,
+                            size: 12,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text("Age calculator",
+                              style: Theme.of(context).textTheme.bodyMedium!),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: auth.isdark ? Colors.white : Colors.black,
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -674,9 +721,8 @@ Widget jobCard(
                           InkWell(
                             onTap: () {
                               provider.updateBookmark(
-                                 
-                                  data.id,
-                                );
+                                data.id,
+                              );
                             },
                             child: SizedBox(
                               height: 40,
@@ -766,7 +812,9 @@ Widget jobCard(
                                     Border.all(color: Colors.grey, width: 0.2)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(DateFormat("dd-MM-yyyy").format(data.deadline.toDate()),
+                              child: Text(
+                                  DateFormat("dd-MM-yyyy")
+                                      .format(data.deadline.toDate()),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!

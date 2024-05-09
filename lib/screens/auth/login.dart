@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
@@ -30,7 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final width = MediaQuery.of(context).size.width;
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xff1E77CF), // Change this color to your desired color
+      statusBarColor:
+          Color(0xff1E77CF), // Change this color to your desired color
     ));
     return Scaffold(
       backgroundColor: const Color(0xffF5F8FC),
@@ -62,10 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(top: 40, left: 25),
+                                padding:
+                                    const EdgeInsets.only(top: 40, left: 25),
                                 child: Text(
                                   "Sign in",
-                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
                                         fontSize: 35,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -81,7 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: width * 0.06,
                         right: width * 0.06,
                         child: Container(
-                          height: MediaQuery.of(context).size.height * .65, // Adjust as needed
+                          height: MediaQuery.of(context).size.height *
+                              .65, // Adjust as needed
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -91,7 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.black.withOpacity(0.2),
                                   spreadRadius: 5,
                                   blurRadius: 7,
-                                  offset: const Offset(0, 3), // changes the position of the shadow
+                                  offset: const Offset(0,
+                                      3), // changes the position of the shadow
                                 ),
                               ]),
                           child: Column(
@@ -100,7 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 40,
                               ),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
                                   child: CustomTextField(
                                     controller: emailController,
                                     prefixIconUrl: Icons.mail_outline,
@@ -122,12 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     hintText: "Email",
                                   )),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
                                   child: CustomTextField(
                                     controller: passwordController,
                                     prefixIconUrl: Icons.lock_open_outlined,
                                     isShowPrefixIcon: true,
-                                  
                                     validation: (password) {
                                       if (password!.isEmpty) {
                                         return "please enter your password";
@@ -139,45 +148,57 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fillColor: Colors.white,
                                     isShowBorder: true,
                                     verticalSize: 15,
-                                    
                                     horizontalSize: 20,
                                     hintText: "Password",
-                                      isPassword: true,
-                                      isShowSuffixIcon:true,
+                                    isPassword: true,
+                                    isShowSuffixIcon: true,
                                   )),
                               GestureDetector(
                                 child: Container(
                                   height: 50,
                                   width: double.infinity,
-                                  margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                                  margin: const EdgeInsets.only(
+                                      left: 20, right: 20, top: 10),
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xff1E77CF),
-                                        shadowColor: Colors.grey.withOpacity(0.5)),
+                                        backgroundColor:
+                                            const Color(0xff1E77CF),
+                                        shadowColor:
+                                            Colors.grey.withOpacity(0.5)),
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
-                                        if (emailController.text == "gausbd.com.server" &&
+                                        if (emailController.text ==
+                                                "gausbd.com.server" &&
                                             passwordController.text ==
                                                 "see you again @bd&9900faysal") {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => AdminFirstScreen()));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AdminFirstScreen()));
                                         } else {
                                           provider
-                                              .signIn(emailController.text, passwordController.text)
+                                              .signIn(emailController.text,
+                                                  passwordController.text)
                                               .then((value) {
                                             if (value) {
-                                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                                  builder: (context) => DashboardScreen()));
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DashboardScreen()));
                                             }
                                           });
                                         }
                                       }
                                     },
                                     child: Text("Sign in",
-                                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                            fontSize: 25,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(
+                                                fontSize: 25,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold)),
                                   ),
                                 ),
                               ),
@@ -185,15 +206,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 40,
                               ),
                               InkWell(
-                                onTap: (){
-                                   Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (context) => const ForgetPassword()));
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ForgetPassword()));
                                 },
                                 child: Text("Forget password",
-                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                              fontSize: 15,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                            fontSize: 15,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold)),
                               ),
                               const Divider(),
                               Text("or continue with",
@@ -202,25 +227,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 40,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 25, right: 25),
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(color: Colors.black, width: 0.3)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15, right: 15),
-                                    child: Row(children: [
-                                      const Icon(
-                                        FontAwesomeIcons.google,
-                                        color: Colors.red,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.13,
-                                      ),
-                                      const Text("Continue with Google")
-                                    ]),
+                                padding:
+                                    const EdgeInsets.only(left: 25, right: 25),
+                                child: InkWell(
+                                  onTap: () {
+                                    EasyLoading.showInfo("Coming Soon");
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.3)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15, right: 15),
+                                      child: Row(children: [
+                                        const Icon(
+                                          FontAwesomeIcons.google,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.13,
+                                        ),
+                                        const Text("Continue with Google")
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -228,25 +261,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 10,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 25, right: 25),
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(color: Colors.black, width: 0.3)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15, right: 15),
-                                    child: Row(children: [
-                                      const Icon(
-                                        FontAwesomeIcons.facebook,
-                                        color: Colors.blue,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.13,
-                                      ),
-                                      const Text("Continue with Facebook")
-                                    ]),
+                                padding:
+                                    const EdgeInsets.only(left: 25, right: 25),
+                                child: InkWell(
+                                  onTap: (){
+                                     EasyLoading.showInfo("Coming Soon");
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.3)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15, right: 15),
+                                      child: Row(children: [
+                                        const Icon(
+                                          FontAwesomeIcons.facebook,
+                                          color: Colors.blue,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.13,
+                                        ),
+                                        const Text("Continue with Facebook")
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -266,8 +307,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => const SignUpScreen()));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignUpScreen()));
                                   },
                                 text: ' Sign Up',
                                 style: Theme.of(context)

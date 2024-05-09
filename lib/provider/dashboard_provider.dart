@@ -165,7 +165,9 @@ class DashBoardProvider with ChangeNotifier {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   void configureFirebaseMessaging() {
-    _firebaseMessaging.getToken().then((token) {});
+    _firebaseMessaging.getToken().then((token) {
+      
+    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _showLocalNotification(

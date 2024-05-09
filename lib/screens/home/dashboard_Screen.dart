@@ -25,7 +25,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookMarkPage(),
-    CalculatorScreen(),
     ProfileScreen()
   ];
   @override
@@ -101,10 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   icon: LineIcons.bookmark,
                   text: 'BookMark',
                 ),
-                GButton(
-                  icon: LineIcons.calculator,
-                  text: 'Calculator',
-                ),
+                
                 GButton(
                   icon: LineIcons.user,
                   text: 'Profile',

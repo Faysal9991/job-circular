@@ -13,7 +13,7 @@ class WebPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Job Circuler BD"),
+          title: Text("BD Job Circular"),
         ),
         body: InAppWebView(
             initialUrlRequest: URLRequest(

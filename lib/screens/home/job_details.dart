@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:job_circuler/component/custom_imageview.dart';
@@ -110,14 +112,18 @@ class _JobDetailsState extends State<JobDetails> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    roundContainer(context, "Full time",
-                        widget.model.subtype == "Full time" ? true : false),
-                    roundContainer(context, "part Time",
-                        widget.model.subtype == "part Time" ? true : false),
-                    roundContainer(
-                        context,
-                        "${DateFormat("dd-MM-yyyy").format(widget.model.deadline.toDate())}",
-                        false)
+                 
+                    Expanded(
+                      child: roundContainer(context, "${DateFormat("dd-MM-yyyy").format(widget.model.date.toDate())}",
+                           true),
+                    ),
+                    SizedBox(width: 10,),
+                    Expanded(
+                      child: roundContainer(
+                          context,
+                          "${DateFormat("dd-MM-yyyy").format(widget.model.deadline.toDate())}",
+                          false),
+                    )
                   ],
                 ),
               ),
@@ -251,9 +257,9 @@ class _JobDetailsState extends State<JobDetails> {
 Widget roundContainer(BuildContext context, String text, bool isSelected) {
   return Container(
     decoration: BoxDecoration(
-        color: isSelected ? Colors.blue : Colors.white,
+        color: Colors.white,
         border: Border.all(
-          color: isSelected ? Colors.blueGrey : Colors.black12,
+          color: Colors.black12,
         ),
         boxShadow: [
           BoxShadow(
@@ -266,11 +272,21 @@ Widget roundContainer(BuildContext context, String text, bool isSelected) {
         borderRadius: BorderRadius.circular(7)),
     child: Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold),
+      child: Column(
+        children: [
+             Text(
+            isSelected?"Publish Date":"DeadLine",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color:  Colors.blue,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color:  Colors.black,
+                fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     ),
   );

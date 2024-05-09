@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
@@ -31,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       statusBarColor: Color(0xff1E77CF), // Change this color to your desired color
     ));
     return Scaffold(
-      backgroundColor: Color(0xffF5F8FC),
+      backgroundColor: const Color(0xffF5F8FC),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -51,7 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.4,
                           width: double.infinity,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color(0xff1E77CF),
                           ),
                           child: Column(
@@ -89,12 +90,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   color: Colors.black.withOpacity(0.2),
                                   spreadRadius: 5,
                                   blurRadius: 7,
-                                  offset: Offset(0, 3), // changes the position of the shadow
+                                  offset: const Offset(0, 3), // changes the position of the shadow
                                 ),
                               ]),
                           child: Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Padding(
@@ -165,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xff1E77CF),
+                                      backgroundColor: const Color(0xff1E77CF),
                                       shadowColor: Colors.grey.withOpacity(0.5)),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
@@ -178,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           .then((value) {
                                         if (value) {
                                           Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => DashboardScreen()));
+                                              builder: (context) => const DashboardScreen()));
                                         }
                                       });
                                     }
@@ -190,61 +191,71 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 40,
                               ),
-                              Divider(),
+                              const Divider(),
                               Text("or continue with",
                                   style: Theme.of(context).textTheme.bodySmall),
-                              SizedBox(
+                              const SizedBox(
                                 height: 40,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 25, right: 25),
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(color: Colors.black, width: 0.3)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15, right: 15),
-                                    child: Row(children: [
-                                      Icon(
-                                        FontAwesomeIcons.google,
-                                        color: Colors.red,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.13,
-                                      ),
-                                      Text("Continue with Google")
-                                    ]),
+                                child: InkWell(
+                                  onTap: (){
+                                    EasyLoading.showInfo("Coming Soon");
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(color: Colors.black, width: 0.3)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 15, right: 15),
+                                      child: Row(children: [
+                                        const Icon(
+                                          FontAwesomeIcons.google,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.13,
+                                        ),
+                                        const Text("Continue with Google")
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 25, right: 25),
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(color: Colors.black, width: 0.3)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 15, right: 15),
-                                    child: Row(children: [
-                                      Icon(
-                                        FontAwesomeIcons.facebook,
-                                        color: Colors.blue,
-                                      ),
-                                      SizedBox(
-                                        width: width * 0.13,
-                                      ),
-                                      Text("Continue with Facebook")
-                                    ]),
+                                child: InkWell(
+                                  onTap: (){
+                                    EasyLoading.showInfo("Coming Soon");
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(color: Colors.black, width: 0.3)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 15, right: 15),
+                                      child: Row(children: [
+                                        const Icon(
+                                          FontAwesomeIcons.facebook,
+                                          color: Colors.blue,
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.13,
+                                        ),
+                                        const Text("Continue with Facebook")
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
