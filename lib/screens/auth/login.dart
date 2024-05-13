@@ -10,7 +10,6 @@ import 'package:job_circuler/screens/admin/admin_first_screen.dart';
 import 'package:job_circuler/screens/auth/forget_password.dart';
 import 'package:job_circuler/screens/auth/sign_up.dart';
 import 'package:job_circuler/screens/home/dashboard_Screen.dart';
-import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -171,10 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 "gausbd.com.server" &&
                                             passwordController.text ==
                                                 "see you again @bd&9900faysal") {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AdminFirstScreen()));
+                                          // Navigator.of(context).push(
+                                          // MaterialPageRoute(
+                                          //     builder: (context) =>
+                                          //         AdminFirstScreen()));
                                         } else {
                                           provider
                                               .signIn(emailController.text,
@@ -264,8 +263,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding:
                                     const EdgeInsets.only(left: 25, right: 25),
                                 child: InkWell(
-                                  onTap: (){
-                                     EasyLoading.showInfo("Coming Soon");
+                                  onTap: () {
+                                    EasyLoading.showInfo("Coming Soon");
                                   },
                                   child: Container(
                                     height: 50,

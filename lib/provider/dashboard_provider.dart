@@ -15,16 +15,7 @@ class DashBoardProvider with ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference _jobdata =
       FirebaseFirestore.instance.collection('jobFields');
-  final List<String> type = [
-    "All",
-    "Govt",
-    "Private",
-    "Bank",
-    "NGO",
-    "Pharma",
-    "Teletalk",
-    "Notice"
-  ];
+
   int selectedIndex = 0;
   chanageIndex(int index) {
     selectedIndex = index;
@@ -38,9 +29,7 @@ class DashBoardProvider with ChangeNotifier {
             name: documentSnapshot.get('name') ?? "",
             description: documentSnapshot.get('description') ?? "",
             id: documentSnapshot.id,
-            type: documentSnapshot.get('type') ?? "",
-            subtype: documentSnapshot.get('subtype') ?? "",
-            salary: documentSnapshot.get('salary') ?? "",
+            subtype: documentSnapshot.get('type') ?? "",
             jobDetails: documentSnapshot.get('jobDetails') ?? "",
             companyImage: documentSnapshot.get('companyImage') ?? "",
             list: documentSnapshot.get('list') ?? [],
@@ -165,9 +154,7 @@ class DashBoardProvider with ChangeNotifier {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   void configureFirebaseMessaging() {
-    _firebaseMessaging.getToken().then((token) {
-      
-    });
+    _firebaseMessaging.getToken().then((token) {});
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _showLocalNotification(

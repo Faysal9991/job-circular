@@ -84,12 +84,12 @@ class _FromDrawerScreenState extends State<FromDrawerScreen> {
                           // Use the data from the stream
                           return StreamBuilder<List<String>>(
                               stream: pro.getCategoryListStream(),
-                              builder: (context, snap) {
-                                if (snap.connectionState ==
+                              builder: (context, calegoryList) {
+                                if (calegoryList.connectionState ==
                                     ConnectionState.waiting) {
                                   return const CircularProgressIndicator();
-                                } else if (snap.hasError) {
-                                  return Text('Error: ${snap.error}');
+                                } else if (calegoryList.hasError) {
+                                  return Text('Error: ${calegoryList.error}');
                                 } else {
                                   // Use the data from the stream
                                   List<JobModel> jobModels = snapshot.data!;
@@ -160,9 +160,11 @@ class _FromDrawerScreenState extends State<FromDrawerScreen> {
                                                           provider: pro,
                                                           index: index,
                                                           auth: auth)
-                                                      : pro.type[pro
+                                                      : calegoryList.data![pro
                                                                   .selectedIndex] ==
-                                                              snap.data![index]
+                                                              snapshot
+                                                                  .data![index]
+                                                                  .subtype
                                                           ? jobCard(
                                                               context: context,
                                                               data: data,

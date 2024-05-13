@@ -95,29 +95,30 @@ class _JobDetailsState extends State<JobDetails> {
               Center(
                 child: Text(
                   widget.model.name,
-                  style: Theme.of(context).textTheme.displayLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge!
+                      .copyWith(fontSize: 17),
                 ),
               ),
               const SizedBox(
                 height: 2,
               ),
-              Center(
-                child: Text(
-                  "${widget.model.salary}",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                 
                     Expanded(
-                      child: roundContainer(context, "${DateFormat("dd-MM-yyyy").format(widget.model.date.toDate())}",
-                           true),
+                      child: roundContainer(
+                          context,
+                          "${DateFormat("dd-MM-yyyy").format(widget.model.date.toDate())}",
+                          true),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                       child: roundContainer(
                           context,
@@ -130,13 +131,13 @@ class _JobDetailsState extends State<JobDetails> {
               const SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Text(
-                  "About the job:",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20, right: 20),
+              //   child: Text(
+              //     "About the job:",
+              //     style: Theme.of(context).textTheme.bodyLarge,
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: SizedBox(
@@ -147,12 +148,18 @@ class _JobDetailsState extends State<JobDetails> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Text(
-                  "Qualification:",
+                  "Details:",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               widget.model.jobDetails == ""
                   ? const SizedBox.shrink()
@@ -165,6 +172,9 @@ class _JobDetailsState extends State<JobDetails> {
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                       )),
+              const SizedBox(
+                height: 10,
+              ),
               //** ---------------------------image */
               const SizedBox(
                 height: 10,
@@ -176,13 +186,13 @@ class _JobDetailsState extends State<JobDetails> {
                   itemCount: widget.model.list.length,
                   itemBuilder: (context, index) {
                     return Container(
-                        color: Colors.white,
-                        height: 200,
                         child: Center(
                             child: WidgetZoom(
                                 heroAnimationTag: '${index}',
-                                zoomWidget:
-                                    Image.network(widget.model.list[index]))));
+                                zoomWidget: Image.network(
+                                  widget.model.list[index],
+                                  fit: BoxFit.cover,
+                                ))));
                   })
             ],
           )),
@@ -196,7 +206,6 @@ class _JobDetailsState extends State<JobDetails> {
                     provider.updateBookmark(
                       widget.model.id,
                     );
-                
                   },
                   child: Container(
                       width: 40,
@@ -211,43 +220,47 @@ class _JobDetailsState extends State<JobDetails> {
                           height: 40,
                           width: 40,
                           child: Icon(
-                           provider.detailsBookmark
+                            provider.detailsBookmark
                                 ? Icons.bookmark_added
                                 : Icons.bookmark_border,
-                            color:
-                                provider.detailsBookmark
-                                    ? Colors.blue
-                                    : auth.isdark
-                                        ? Colors.white
-                                        : Colors.black,
+                            color: provider.detailsBookmark
+                                ? Colors.blue
+                                : auth.isdark
+                                    ? Colors.white
+                                    : Colors.black,
                           ),
                         ),
                       )),
                 ),
               ),
               const Expanded(child: SizedBox()),
-              Expanded(
-                flex: 9,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      backgroundColor: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WebPage(
-                                    url: widget.model.link,
-                                  )));
-                    },
-                    child: Text(
-                      "Apply Now",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    )),
-              )
+              widget.model.link == ""
+                  ? const SizedBox.shrink()
+                  : Expanded(
+                      flex: 9,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => WebPage(
+                                          url: widget.model.link,
+                                        )));
+                          },
+                          child: Text(
+                            "Apply Now",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(color: Colors.white),
+                          )),
+                    )
             ]),
           ));
     });
@@ -274,17 +287,19 @@ Widget roundContainer(BuildContext context, String text, bool isSelected) {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-             Text(
-            isSelected?"Publish Date":"DeadLine",
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color:  Colors.blue,
-                fontWeight: FontWeight.bold),
+          Text(
+            isSelected ? "Publish Date" : "DeadLine",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color:  Colors.black,
-                fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ],
       ),

@@ -10,8 +10,8 @@ import 'package:job_circuler/model/job_model.dart';
 
 class AdminProvider with ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
-   Future init() async {
-      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  Future init() async {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
     await firebaseMessaging.requestPermission(
       alert: true,
@@ -26,6 +26,7 @@ class AdminProvider with ChangeNotifier {
     final token = await firebaseMessaging.getToken();
     print("device token: $token");
   }
+
   final List<String> type = [
     "All",
     "Govt",
@@ -52,11 +53,14 @@ class AdminProvider with ChangeNotifier {
   List imageList = [];
   String companyPicture = "";
 
-  void uploadImages(File imagePath, Function callback, {bool isSingle = false}) async {
+  void uploadImages(File imagePath, Function callback,
+      {bool isSingle = false}) async {
     isLoading = true;
     notifyListeners();
     CloudinaryResponse response = await cloudinary.upload(
-        file: imagePath.path, fileName: 'public', progressCallback: (int value, int data) {});
+        file: imagePath.path,
+        fileName: 'public',
+        progressCallback: (int value, int data) {});
     if (response.statusCode == 200) {
       // Successfully uploaded
       if (isSingle) {
@@ -71,10 +75,11 @@ class AdminProvider with ChangeNotifier {
       print('Error during upload. Status code: ${response.statusCode}');
     }
     isLoading = false;
-   notifyListeners();
+    notifyListeners();
   }
 
-  final CollectionReference _jobdata = FirebaseFirestore.instance.collection('jobFields');
+  final CollectionReference _jobdata =
+      FirebaseFirestore.instance.collection('jobFields');
 
   Stream<List<JobModel>> getAllFood() {
     return _jobdata.snapshots().map((QuerySnapshot querySnapshot) {
@@ -83,18 +88,15 @@ class AdminProvider with ChangeNotifier {
             name: documentSnapshot.get('name') ?? "",
             description: documentSnapshot.get('description') ?? "",
             id: documentSnapshot.id,
-            type: documentSnapshot.get('type') ?? "",
             subtype: documentSnapshot.get('subtype') ?? "",
-            salary: documentSnapshot.get('salary') ?? "",
             jobDetails: documentSnapshot.get('jobDetails') ?? "",
             companyImage: documentSnapshot.get('companyImage') ?? "",
             list: documentSnapshot.get('list') ?? [],
-            link: documentSnapshot.get('link')??"",
-            bookMark: documentSnapshot.get('bookMark')??false,
-            popular:documentSnapshot.get('popular')??false, 
-            date:documentSnapshot.get('date'),
-            deadline:documentSnapshot.get('deadline')
-            );
+            link: documentSnapshot.get('link') ?? "",
+            bookMark: documentSnapshot.get('bookMark') ?? false,
+            popular: documentSnapshot.get('popular') ?? false,
+            date: documentSnapshot.get('date'),
+            deadline: documentSnapshot.get('deadline'));
       }).toList();
     });
   }
@@ -108,7 +110,7 @@ class AdminProvider with ChangeNotifier {
     required String salary,
     required String companyImage,
     required List image,
-     required String link,
+    required String link,
   }) async {
     // Obtain shared preferences.
     EasyLoading.show(status: "Creating new Job");
@@ -123,7 +125,7 @@ class AdminProvider with ChangeNotifier {
         "jobDetails": jobDetails,
         "companyImage": companyImage,
         "list": image,
-        "bookMark":false
+        "bookMark": false
       }).then((value) {
         print("-------${value.id}");
       });
@@ -136,8 +138,7 @@ class AdminProvider with ChangeNotifier {
     }
   }
 
-
- Future<bool> sendNotificationLocal({
+  Future<bool> sendNotificationLocal({
     required String title,
     required String description,
   }) async {
@@ -145,11 +146,10 @@ class AdminProvider with ChangeNotifier {
     EasyLoading.show(status: "Creating new notification");
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
-      firestore.collection("notification").add({
-        "title": title,
-        "description": description,
-        "user":[]
-      }).then((value) {});
+      firestore
+          .collection("notification")
+          .add({"title": title, "description": description, "user": []}).then(
+              (value) {});
       EasyLoading.showSuccess("Successful");
       return true;
     } on FirebaseException catch (e) {
@@ -163,9 +163,4 @@ class AdminProvider with ChangeNotifier {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     firestore.collection("jobFields").doc(id).delete();
   }
-
-    
-
-
-
 }

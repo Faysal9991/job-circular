@@ -45,13 +45,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         extendBody: true,
         appBar: AppBar(
-      
-       
           elevation: 0,
           backgroundColor: Colors.white.withOpacity(0.3),
           actions: [
-            Spacer(),
-            Text("BD JOB CIRCULAR",style: Theme.of(context).textTheme.labelLarge,),
+            const Spacer(),
+            Text(
+              "BD JOB CIRCULAR",
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge!
+                  .copyWith(fontSize: 20),
+            ),
             const Spacer(),
             Row(
               children: [
@@ -203,12 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.circle_rounded,
                                             color: Colors.black,
                                             size: 12,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 15,
                                           ),
                                           Text(
@@ -283,12 +287,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     child: Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.circle_rounded,
                                           color: Colors.black,
                                           size: 12,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 15,
                                         ),
                                         Text(snapshot.data![index],
@@ -322,12 +326,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.circle_rounded,
                             color: Colors.black,
                             size: 12,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 15,
                           ),
                           Text("Age calculator",
@@ -514,12 +518,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Use the data from the stream
                       return StreamBuilder<List<String>>(
                           stream: pro.getCategoryListStream(),
-                          builder: (context, snap) {
-                            if (snap.connectionState ==
+                          builder: (context, categoryList) {
+                            if (categoryList.connectionState ==
                                 ConnectionState.waiting) {
                               return const CircularProgressIndicator();
-                            } else if (snap.hasError) {
-                              return Text('Error: ${snap.error}');
+                            } else if (categoryList.hasError) {
+                              return Text('Error: ${categoryList.error}');
                             } else {
                               // Use the data from the stream
                               List<JobModel> jobModels = snapshot.data!;
@@ -588,9 +592,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       provider: pro,
                                                       index: index,
                                                       auth: auth)
-                                                  : pro.type[pro
+                                                  : categoryList.data![pro
                                                               .selectedIndex] ==
-                                                          snap.data![index]
+                                                          snapshot.data![index]
+                                                              .subtype
                                                       ? jobCard(
                                                           context: context,
                                                           data: data,
@@ -612,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget imageView(
+imageView(
   String url,
 ) {
   return CachedNetworkImage(
@@ -620,7 +625,9 @@ Widget imageView(
     imageBuilder: (context, imageProvider) => Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+        image: DecorationImage(
+          image: imageProvider,
+        ),
       ),
     ),
     placeholder: (context, url) => Image.asset(
@@ -698,24 +705,29 @@ Widget jobCard(
                                 ],
                                 border:
                                     Border.all(color: Colors.blue, width: 0.2)),
-                            child: imageView(data.companyImage),
+                            child: data.companyImage == ""
+                                ? null
+                                : imageView(data.companyImage),
                           ),
                           const SizedBox(width: 8),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(data.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
-                              Text(data.type,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: Colors.grey)),
-                            ],
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(data.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                Text(data.subtype,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.grey)),
+                              ],
+                            ),
                           ),
                           const Spacer(),
                           InkWell(
@@ -753,48 +765,6 @@ Widget jobCard(
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey
-                                          .withOpacity(0.2), // Shadow color
-                                      blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(
-                                          0, 3) // Offset of the shadow
-                                      )
-                                ],
-                                border:
-                                    Border.all(color: Colors.grey, width: 0.2)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(data.salary,
-                                  style: Theme.of(context).textTheme.bodySmall),
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(7),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey
-                                          .withOpacity(0.2), // Shadow color
-                                      blurRadius: 10, // Spread of the shadow
-                                      offset: const Offset(
-                                          0, 3) // Offset of the shadow
-                                      )
-                                ],
-                                border:
-                                    Border.all(color: Colors.grey, width: 0.2)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(data.subtype,
-                                  style: Theme.of(context).textTheme.bodySmall),
-                            ),
-                          ),
                           Container(
                             decoration: BoxDecoration(
                                 color: Colors.blue,

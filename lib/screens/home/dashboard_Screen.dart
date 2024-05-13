@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
@@ -19,9 +18,10 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
-     Provider.of<AuthProvider>(context,listen:  false).getUserDetails();
+    Provider.of<AuthProvider>(context, listen: false).getUserDetails();
     super.initState();
   }
+
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookMarkPage(),
@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 );
               });
-      
+
           if (value != null) {
             return Future.value(value);
           } else {
@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               iconSize: 15, // tab button icon size
               tabBackgroundColor: Colors.blue, // selected tab background color
               textSize: 10,
-      
+
               textStyle: Theme.of(context)
                   .textTheme
                   .bodyMedium!
@@ -100,7 +100,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   icon: LineIcons.bookmark,
                   text: 'BookMark',
                 ),
-                
                 GButton(
                   icon: LineIcons.user,
                   text: 'Profile',
