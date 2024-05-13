@@ -44,16 +44,16 @@ class _FromDrawerScreenState extends State<FromDrawerScreen> {
                           pro.filter[0],
                           pro.lastThreeDays == false &&
                                   pro.lastTenDays == false &&
-                                  pro.lastTwineDays == false
+                                  pro.lastSevenDays == false
                               ? true
                               : false,
                           context),
                       _buildPopupMenuItem(pro.filter[1],
                           pro.lastThreeDays ? true : false, context),
                       _buildPopupMenuItem(pro.filter[2],
-                          pro.lastTenDays ? true : false, context),
+                          pro.lastSevenDays ? true : false, context),
                       _buildPopupMenuItem(pro.filter[3],
-                          pro.lastTwineDays ? true : false, context),
+                          pro.lastTenDays ? true : false, context),
                       _buildPopupMenuItem("by deadline", false, context),
                     ],
                 child: Padding(
@@ -107,13 +107,13 @@ class _FromDrawerScreenState extends State<FromDrawerScreen> {
                                     Duration difference = DateTime.now()
                                         .difference(job.date.toDate());
 
-                                    return difference.inDays <= 10;
+                                    return difference.inDays <= 7;
                                   }).toList();
                                   List<JobModel> twofilteredJobs =
                                       jobModels.where((job) {
                                     Duration difference = DateTime.now()
                                         .difference(job.date.toDate());
-                                    return difference.inDays <= 20;
+                                    return difference.inDays <= 10;
                                   }).toList();
                                   return ListView.separated(
                                     physics:
@@ -145,7 +145,7 @@ class _FromDrawerScreenState extends State<FromDrawerScreen> {
                                                   provider: pro,
                                                   index: index,
                                                   auth: auth)
-                                              : pro.lastTwineDays
+                                              : pro.lastSevenDays
                                                   ? jobCard(
                                                       context: context,
                                                       data: twofilteredJobs[
@@ -206,10 +206,10 @@ PopupMenuItem _buildPopupMenuItem(
       children: [
         Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: isSelected ? Colors.green : null),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: isSelected ? Colors.blue : Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
         ),
       ],
     ),

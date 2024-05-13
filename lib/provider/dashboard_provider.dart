@@ -294,8 +294,8 @@ class DashBoardProvider with ChangeNotifier {
 
   List<String> filter = ['All', 'Last 3 Days', 'Last 10 Days', 'Last 20 Days'];
   bool lastThreeDays = false;
+  bool lastSevenDays = false;
   bool lastTenDays = false;
-  bool lastTwineDays = false;
   bool all = false;
   String? selectedfilter;
 
@@ -304,25 +304,25 @@ class DashBoardProvider with ChangeNotifier {
     if (value == filter[0]) {
       lastThreeDays = false;
       lastTenDays = false;
-      lastTwineDays = false;
+      lastSevenDays = false;
       all = true;
       EasyLoading.showSuccess("All Job Showing");
     } else if (value == filter[1]) {
       lastThreeDays = true;
       lastTenDays = false;
-      lastTwineDays = false;
+      lastSevenDays = false;
       all = false;
       EasyLoading.showSuccess("Last 3 days Job Showing");
     } else if (value == filter[2]) {
       lastThreeDays = false;
       lastTenDays = true;
-      lastTwineDays = false;
+      lastSevenDays = false;
       all = false;
       EasyLoading.showSuccess("Last 10 days Job Showing");
     } else if (value == filter[3]) {
       lastThreeDays = false;
       lastTenDays = false;
-      lastTwineDays = true;
+      lastSevenDays = true;
       all = false;
       EasyLoading.showSuccess("Last 20 days Job Showing");
     }
@@ -331,9 +331,9 @@ class DashBoardProvider with ChangeNotifier {
 
   List<String> deadlineFilter = [
     "Today",
-    "Tomorrow"
-        "Last three days",
-    "Last ten days",
+    "Tomorrow",
+    "Next 3 Days",
+    "Next 5 Days",
   ];
   int selectedDeadlineFilterName = 0;
   channgeDeadlineFilterName(int index) {

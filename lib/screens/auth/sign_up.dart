@@ -8,7 +8,6 @@ import 'package:job_circuler/component/custom_textfield.dart';
 import 'package:job_circuler/provider/auth_provider.dart';
 import 'package:job_circuler/screens/auth/login.dart';
 import 'package:job_circuler/screens/home/dashboard_Screen.dart';
-import 'package:job_circuler/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -29,7 +28,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final width = MediaQuery.of(context).size.width;
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xff1E77CF), // Change this color to your desired color
+      statusBarColor:
+          Color(0xff1E77CF), // Change this color to your desired color
     ));
     return Scaffold(
       backgroundColor: const Color(0xffF5F8FC),
@@ -60,10 +60,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(top: 40, left: 25),
+                                padding:
+                                    const EdgeInsets.only(top: 40, left: 25),
                                 child: Text(
                                   "Sign up",
-                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
                                         fontSize: 35,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -79,8 +83,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         left: width * 0.06,
                         right: width * 0.06,
                         child: Container(
-                          
-                          height: MediaQuery.of(context).size.height * .75, // Adjust as needed
+                          height: MediaQuery.of(context).size.height *
+                              .75, // Adjust as needed
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -90,7 +94,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   color: Colors.black.withOpacity(0.2),
                                   spreadRadius: 5,
                                   blurRadius: 7,
-                                  offset: const Offset(0, 3), // changes the position of the shadow
+                                  offset: const Offset(0,
+                                      3), // changes the position of the shadow
                                 ),
                               ]),
                           child: Column(
@@ -99,10 +104,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 height: 20,
                               ),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
                                   child: CustomTextField(
                                     controller: usernameController,
-                                    prefixIconUrl: Icons.mail_outline,
+                                    prefixIconUrl: Icons.person,
                                     isShowPrefixIcon: true,
                                     validation: (userName) {
                                       if (userName!.isNotEmpty) {
@@ -119,7 +125,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     hintText: "User name",
                                   )),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
                                   child: CustomTextField(
                                     controller: emailController,
                                     prefixIconUrl: Icons.mail_outline,
@@ -141,11 +148,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     hintText: "Email",
                                   )),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 10),
                                   child: CustomTextField(
                                     controller: passwordController,
                                     prefixIconUrl: Icons.lock_open_outlined,
                                     isShowPrefixIcon: true,
+                                    isPassword: true,
+                                    isShowSuffixIcon: true,
                                     validation: (password) {
                                       if (password!.isEmpty) {
                                         return "please enter your password";
@@ -163,11 +173,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Container(
                                 height: 50,
                                 width: double.infinity,
-                                margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                                margin: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 10),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xff1E77CF),
-                                      shadowColor: Colors.grey.withOpacity(0.5)),
+                                      shadowColor:
+                                          Colors.grey.withOpacity(0.5)),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       // provider.signIn(emailController.text, passwordController.text, (status, massage) {
@@ -178,17 +190,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               username: usernameController.text)
                                           .then((value) {
                                         if (value) {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => const DashboardScreen()));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const DashboardScreen()));
                                         }
                                       });
                                     }
                                   },
                                   child: Text("Sign up",
-                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold)),
                                 ),
                               ),
                               const SizedBox(
@@ -201,9 +218,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 height: 40,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 25, right: 25),
+                                padding:
+                                    const EdgeInsets.only(left: 25, right: 25),
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     EasyLoading.showInfo("Coming Soon");
                                   },
                                   child: Container(
@@ -211,9 +229,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(30),
-                                        border: Border.all(color: Colors.black, width: 0.3)),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.3)),
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 15, right: 15),
+                                      padding: const EdgeInsets.only(
+                                          left: 15, right: 15),
                                       child: Row(children: [
                                         const Icon(
                                           FontAwesomeIcons.google,
@@ -232,9 +252,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 height: 10,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 25, right: 25),
+                                padding:
+                                    const EdgeInsets.only(left: 25, right: 25),
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     EasyLoading.showInfo("Coming Soon");
                                   },
                                   child: Container(
@@ -242,9 +263,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(30),
-                                        border: Border.all(color: Colors.black, width: 0.3)),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.3)),
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 15, right: 15),
+                                      padding: const EdgeInsets.only(
+                                          left: 15, right: 15),
                                       child: Row(children: [
                                         const Icon(
                                           FontAwesomeIcons.facebook,
@@ -275,8 +298,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               TextSpan(
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => const LoginScreen()));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginScreen()));
                                   },
                                 text: ' Sign in',
                                 style: Theme.of(context)

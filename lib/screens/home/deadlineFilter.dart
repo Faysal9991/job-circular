@@ -18,8 +18,14 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
     return Consumer2<DashBoardProvider, AuthProvider>(
         builder: (context, provider, auth, child) {
       return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Filter Jobs By Deadline",
+            style: Theme.of(context).appBarTheme.titleTextStyle,
+          ),
+        ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,34 +33,6 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Text(
-                        "Lets Filter job",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      )),
-                ],
-              ),
-              const SizedBox(height: 20),
               Container(
                 height: 60,
                 decoration:
@@ -131,66 +109,72 @@ class _DeadlineScreenState extends State<DeadlineScreen> {
               const Divider(),
               Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child:StreamBuilder<List<JobModel>>(
-  stream: provider.getJobs(),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const CircularProgressIndicator();
-    } else if (snapshot.hasError) {
-      return Text('Error: ${snapshot.error}');
-    } else {
-      // Use the data from the stream
-      List<JobModel> jobModels = snapshot.data!;
-      
-      // Filter jobs based on selected filter name
-      List<JobModel> filteredJobs = [];
+                  child: StreamBuilder<List<JobModel>>(
+                      stream: provider.getJobs(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          // Use the data from the stream
+                          List<JobModel> jobModels = snapshot.data!;
 
-      if (provider.selectedDeadlineFilterName == 0) {
-        // Show jobs with today's deadline or earlier
-        filteredJobs = jobModels.where((job) {
-          Duration difference = job.deadline.toDate().difference(DateTime.now());
-          return difference.inDays == 0;
-        }).toList();
-      } else if (provider.selectedDeadlineFilterName == 1) {
-        // Show jobs with tomorrow's deadline or earlier
-        filteredJobs = jobModels.where((job) {
-          Duration difference = job.deadline.toDate().difference(DateTime.now());
-          return difference.inDays >= -1;
-        }).toList();
-      } else if (provider.selectedDeadlineFilterName == 2) {
-        // Show jobs with deadline within the next 3 days or earlier
-        filteredJobs = jobModels.where((job) {
-          Duration difference = job.deadline.toDate().difference(DateTime.now());
-          return difference.inDays >= -3;
-        }).toList();
-      } else if (provider.selectedDeadlineFilterName == 3) {
-        // Show jobs with deadline within the next 10 days or earlier
-        filteredJobs = jobModels.where((job) {
-          Duration difference = job.deadline.toDate().difference(DateTime.now());
-          return difference.inDays >= -10;
-        }).toList();
-      }
+                          // Filter jobs based on selected filter name
+                          List<JobModel> filteredJobs = [];
 
-      return ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: filteredJobs.length,
-        separatorBuilder: (ctx, idx) {
-          return const SizedBox(height: 10);
-        },
-        itemBuilder: (cont, index) => jobCard(
-          context: context,
-          data: filteredJobs[index],
-          provider: provider,
-          index: index,
-          auth: auth
-        )
-      );
-    }
-  }
-))
-  ],
+                          if (provider.selectedDeadlineFilterName == 0) {
+                            // Show jobs with today's deadline or earlier
+                            filteredJobs = jobModels.where((job) {
+                              Duration difference = job.deadline
+                                  .toDate()
+                                  .difference(DateTime.now());
+                              return difference.inDays == 0;
+                            }).toList();
+                          } else if (provider.selectedDeadlineFilterName == 1) {
+                            // Show jobs with tomorrow's deadline or earlier
+                            filteredJobs = jobModels.where((job) {
+                              Duration difference = job.deadline
+                                  .toDate()
+                                  .difference(DateTime.now());
+                              return difference.inDays >= -1;
+                            }).toList();
+                          } else if (provider.selectedDeadlineFilterName == 2) {
+                            // Show jobs with deadline within the next 3 days or earlier
+                            filteredJobs = jobModels.where((job) {
+                              Duration difference = job.deadline
+                                  .toDate()
+                                  .difference(DateTime.now());
+                              return difference.inDays >= -3;
+                            }).toList();
+                          } else if (provider.selectedDeadlineFilterName == 3) {
+                            // Show jobs with deadline within the next 10 days or earlier
+                            filteredJobs = jobModels.where((job) {
+                              Duration difference = job.deadline
+                                  .toDate()
+                                  .difference(DateTime.now());
+                              return difference.inDays >= -5;
+                            }).toList();
+                          }
+
+                          return ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: filteredJobs.length,
+                              separatorBuilder: (ctx, idx) {
+                                return const SizedBox(height: 10);
+                              },
+                              itemBuilder: (cont, index) => jobCard(
+                                  context: context,
+                                  data: filteredJobs[index],
+                                  provider: provider,
+                                  index: index,
+                                  auth: auth));
+                        }
+                      }))
+            ],
           ),
         ),
       );

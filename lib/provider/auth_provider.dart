@@ -42,7 +42,7 @@ class AuthProvider with ChangeNotifier {
       return true;
     } on FirebaseException catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      EasyLoading.showError(e.message.toString());
       return false;
     }
   }
@@ -75,7 +75,7 @@ class AuthProvider with ChangeNotifier {
       return true;
     } on FirebaseException catch (e) {
       EasyLoading.dismiss();
-      EasyLoading.showError(e.toString());
+      EasyLoading.showError(e.message.toString());
       return false;
     }
   }
@@ -88,7 +88,7 @@ class AuthProvider with ChangeNotifier {
           .doc(userId)
           .update({"userName": username});
     } catch (e) {
-      EasyLoading.showError("e");
+      EasyLoading.showError(e.toString());
     }
     getUserDetails();
     EasyLoading.showSuccess("Updated");

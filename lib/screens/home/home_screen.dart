@@ -79,24 +79,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           _buildPopupMenuItem(
                               pro.filter[0],
                               pro.lastThreeDays == false &&
-                                      pro.lastTenDays == false &&
-                                      pro.lastTwineDays == false
+                                      pro.lastSevenDays == false &&
+                                      pro.lastTenDays == false
                                   ? true
                                   : false,
                               context),
                           _buildPopupMenuItem(pro.filter[1],
                               pro.lastThreeDays ? true : false, context),
                           _buildPopupMenuItem(pro.filter[2],
-                              pro.lastTenDays ? true : false, context),
+                              pro.lastSevenDays ? true : false, context),
                           _buildPopupMenuItem(pro.filter[3],
-                              pro.lastTwineDays ? true : false, context),
+                              pro.lastTenDays ? true : false, context),
                           _buildPopupMenuItem("by deadline", false, context),
                         ],
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SvgPicture.asset(
                         "assets/svg/filter.svg",
-                        color: Colors.black,
+                        color: pro.lastThreeDays == false &&
+                                pro.lastSevenDays == false &&
+                                pro.lastTenDays == false
+                            ? Colors.black
+                            : Colors.blue,
                       ),
                     ))
               ],
@@ -118,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       hasNotificationForCurrentUser = false;
                       for (int i = 0; i < notifications.length; i++) {
                         if (notifications[i].user!.contains(auth.userId)) {
-                          hasNotificationForCurrentUser = true;
+                          hasNotificationForCurrentUser = false;
                           break;
                         }
                       }
@@ -578,7 +582,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               provider: pro,
                                               index: index,
                                               auth: auth)
-                                          : pro.lastTwineDays
+                                          : pro.lastSevenDays
                                               ? jobCard(
                                                   context: context,
                                                   data: twofilteredJobs[index],
@@ -974,10 +978,10 @@ PopupMenuItem _buildPopupMenuItem(
       children: [
         Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: isSelected ? Colors.green : null),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: isSelected ? Colors.blue : Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.bold),
         ),
       ],
     ),
